@@ -1,0 +1,54 @@
+/* Container for each dropdown */
+.dropdown {
+    float: left; /* Align horizontally */
+    position: relative;
+    padding: 5px;
+}
+
+/* Style for each dropdown button */
+.dropbtn {
+    background-color: #f8f9fa;
+    color: black;
+    padding: 16px;
+    font-size: 16px;
+    border: 1px solid #e9ecef;
+    cursor: pointer;
+    display: flex; /* Use flexbox to align text and icon */
+    justify-content: space-between; /* Space out text and icon */
+    align-items: center; /* Center-align vertically */
+}
+
+/* Dropdown content */
+.dropdown-content {
+    display: none;
+    position: absolute;
+    background-color: #f9f9f9;
+    min-width: 160px;
+    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+    z-index: 1;
+}
+
+/* Links inside the dropdown */
+.dropdown-content a {
+    color: black;
+    padding: 12px 16px;
+    text-decoration: none;
+    display: block;
+    background-color: #ffffff;
+}
+
+/* Change color of dropdown links on hover */
+.dropdown-content a:hover {background-color: #f8f9fa}
+
+/* Show the dropdown menu on hover */
+.dropdown:hover .dropdown-content {
+    display: block;
+}
+
+/* Change the background color of the dropdown button when the dropdown content is shown */
+.dropdown:hover .dropbtn {
+    background-color: #e9ecef;
+}
+.dropdown-icon {
+    margin-left: 5px; /* Space between text and icon */
+}
