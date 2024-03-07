@@ -36,7 +36,9 @@ function GameReviews({ filter }) {
           }
         } else if (filter.actionType === 'filter') {
           // Assuming filter.type is included in the filter object for score filtering
-          reviewsData = reviewsData.filter(review => review.review_score.toString() === filter.value);
+          if (filter.value !== 'All Scores') {
+            reviewsData = reviewsData.filter(review => review.review_score.toString() === filter.value);
+          }
         }
         console.log("Modified Reviews Data:", reviewsData);
         // For other filters, implement similar conditional checks
