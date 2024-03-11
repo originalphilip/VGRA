@@ -7,10 +7,10 @@ import GameReviews from './components/GameReviews.js';
 import FilterButtons from './components/filterButtons.js';
 
 function App() {
-  const [filter, setFilter] = useState({type: '', value: ''});
+  const [filter, setFilter] = useState({ sort: '', score: '' });
 
   const handleFilter = (filterObj) => {
-    setFilter(filterObj);
+    setFilter(prev => ({ ...prev, ...filterObj }));
     console.log("Updated Filter State:", filterObj);
   };
 

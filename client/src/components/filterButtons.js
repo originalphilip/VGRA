@@ -7,11 +7,21 @@ function FilterButtons({ onFilter }) {
     dropdownContent.style.display = dropdownContent.style.display === 'block' ? 'none' : 'block';
   };
 
-  const handleAction = (actionType, value) => {
-    // Call onFilter with an object indicating the action type and value
-    console.log("Action Type:", actionType, "Value:", value);
-    onFilter({ actionType, value });
+  // Example for handling a sorting action
+  const handleSort = (sortCondition) => {
+    onFilter({ sort: sortCondition });
   };
+
+// Example for handling a score filter action
+  const handleScoreFilter = (score) => {
+    onFilter({ score: score });
+  };
+
+  // const handleAction = (actionType, value) => {
+  //   // Call onFilter with an object indicating the action type and value
+  //   console.log("Action Type:", actionType, "Value:", value);
+  //   onFilter({ actionType, value });
+  // };
 
   //Handle filter content
   const filterContent = (actionType,value) => {
@@ -39,9 +49,9 @@ function FilterButtons({ onFilter }) {
         <button className="dropbtn" onClick={toggleDropdown}>Sort by latest-oldest <span className="dropdown-icon">&#9662;</span></button>
         <div className="dropdown-content">
           {/* Pass the filter type as an argument to filterContent */}
-          <a href="#" onClick={() => handleAction('sort', 'latest-oldest')}>Sort by latest-oldest</a>
-          <a href="#" onClick={() => handleAction('sort', 'oldest-latest')}>Sort by oldest-latest</a>
-          <a href="#" onClick={() => handleAction('sort', 'score')}>Sort by score</a>
+          <a href="#" onClick={() => handleSort('latest-oldest')}>Sort by latest-oldest</a>
+          <a href="#" onClick={() => handleSort('oldest-latest')}>Sort by oldest-latest</a>
+          <a href="#" onClick={() => handleSort('score')}>Sort by score</a>
         </div>
       </div>
       <div className="dropdown">
@@ -57,19 +67,19 @@ function FilterButtons({ onFilter }) {
        <div className="dropdown">
         <button className="dropbtn" onClick={toggleDropdown}>All Scores <span className="dropdown-icon">&#9662;</span></button>
         <div className="dropdown-content">
-            <a href="#" onClick={() => filterContent('filter','All Scores')}>All Scores</a>
-            <a href="#" onClick={() => filterContent('filter','10')}>10</a>
+            <a href="#" onClick={() => handleScoreFilter('All Scores')}>All Scores</a>
+            <a href="#" onClick={() => handleScoreFilter('10')}>10</a>
             {/*<a href="#" onClick={() => filterContent('9')}>9 - 9.9</a> change to this when i have the averge done */}
-            <a href="#" onClick={() => filterContent('filter','9')}>9 - 9.9</a>
-            <a href="#" onClick={() => filterContent('filter','8')}>8 - 8.9</a>
-            <a href="#" onClick={() => filterContent('filter','7')}>7 - 7.9</a>
-            <a href="#" onClick={() => filterContent('filter','6')}>6 - 6.9</a>
-            <a href="#" onClick={() => filterContent('filter','5')}>5 - 5.9</a>
-            <a href="#" onClick={() => filterContent('filter','4')}>4 - 4.9</a>
-            <a href="#" onClick={() => filterContent('filter','3')}>3 - 3.9</a>
-            <a href="#" onClick={() => filterContent('filter','2')}>2 - 2.9</a>
-            <a href="#" onClick={() => filterContent('filter','1')}>1 - 1.9</a>
-            <a href="#" onClick={() => filterContent('filter','0')}>0 - 0.9</a>
+            <a href="#" onClick={() => handleScoreFilter('9')}>9 - 9.9</a>
+            <a href="#" onClick={() => handleScoreFilter('8')}>8 - 8.9</a>
+            <a href="#" onClick={() => handleScoreFilter('7')}>7 - 7.9</a>
+            <a href="#" onClick={() => handleScoreFilter('6')}>6 - 6.9</a>
+            <a href="#" onClick={() => handleScoreFilter('5')}>5 - 5.9</a>
+            <a href="#" onClick={() => handleScoreFilter('4')}>4 - 4.9</a>
+            <a href="#" onClick={() => handleScoreFilter('3')}>3 - 3.9</a>
+            <a href="#" onClick={() => handleScoreFilter('2')}>2 - 2.9</a>
+            <a href="#" onClick={() => handleScoreFilter('1')}>1 - 1.9</a>
+            <a href="#" onClick={() => handleScoreFilter('0')}>0 - 0.9</a>
         </div>
       </div>
     </div>

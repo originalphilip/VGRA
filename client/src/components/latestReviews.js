@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 
-function latestReview() {
+function LatestReview() {
   const [reviews, setReviews] = useState([]);
 
   useEffect(() => {
@@ -27,4 +27,4 @@ return (
   
 }
 
-export default latestReview
+export default LatestReview
