@@ -54,16 +54,7 @@ function FilterButtons({ onFilter }) {
           <a href="#" onClick={() => handleSort('score')}>Sort by score</a>
         </div>
       </div>
-      <div className="dropdown">
-        <button className="dropbtn" onClick={toggleDropdown}>All Platforms <span className="dropdown-icon">&#9662;</span></button>
-        <div className="dropdown-content">
-            <a href="#" onClick={() => filterContent('All Platforms')}>All Platforms</a>
-            <a href="#" onClick={() => filterContent('PS5')}>PS5</a>
-            <a href="#" onClick={() => filterContent('Xbox Series X/S')}>Xbox Series X/S</a>
-            <a href="#" onClick={() => filterContent('Nintendo Switch')}>Nintendo Switch</a>
-            <a href="#" onClick={() => filterContent('PC')}>PC</a>
-        </div>
-       </div>
+      
        <div className="dropdown">
         <button className="dropbtn" onClick={toggleDropdown}>All Scores <span className="dropdown-icon">&#9662;</span></button>
         <div className="dropdown-content">

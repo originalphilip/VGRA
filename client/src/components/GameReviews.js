@@ -79,7 +79,7 @@ function GameReviews({ filter }) {
           <div key={index} className="game-container">
             <div className="image-placeholder"></div> {/* If you have images, dynamically set the src attribute here */}
             <div className="game-info">
-              <h1>{review.game_title} - {review.review_score}</h1> {/* Display the review data */}
+              <h1>{review.game_title} - <span className="review-score">{review.review_score}</span></h1> {/* Display the review data */}
               <p>{review.description} - {review.review_date}</p>
             </div>
           </div>

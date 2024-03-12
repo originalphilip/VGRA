@@ -120,3 +120,7 @@ p {
     text-align: justify;
     /* Add other styles for the paragraph as needed */
 }
+.review-score {
+    color: blue; /* This is just an example color (orange) */
+  }
+  
