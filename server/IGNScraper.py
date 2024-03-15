@@ -40,14 +40,14 @@ while True:
     # Calculate new scroll height and compare with last scroll height
     new_height = driver.execute_script("return document.body.scrollHeight")
     if new_height == last_height:
-        # If heights are the same, you've reached the bottom of the page
+        
         break
     last_height = new_height
 
-# Now that all content has been loaded, you can scrape it
+
 soup = BeautifulSoup(driver.page_source, 'html.parser')
 
-# Find the common parent elements. Adjust the selector as needed.
+# Find the common parent elements.
 common_parents = soup.find_all('div', class_='content-item jsx-1409608325 row divider')
 
 base_url = 'https://www.ign.com'
@@ -79,7 +79,7 @@ def parse_relative_date(date_str):
             print(f"Unrecognized date format: {date_str}")
             return today
 
-# Example usage
+
 print(parse_relative_date("5d ago"))  # Relative date
 print(parse_relative_date("Jul 5, 2023"))  # Absolute date
 
@@ -87,7 +87,13 @@ print(parse_relative_date("Jul 5, 2023"))  # Absolute date
 
 for parent in common_parents:
     # Within each parent, find the title and the score
-    title = parent.find('span', class_='interface jsx-777404155 item-title bold').text.strip()
+    title_element = parent.find('span', class_='interface jsx-777404155 item-title bold')
+    if title_element:
+        title = title_element.text.strip()
+        # Remove the word "Review" from the title if present
+        title = title.replace('Review', '') 
+    else:
+        title = "Unknown Title"
     score = parent.find('figcaption').text.strip()  # Assuming score is directly within figcaption
     a_tag = parent.find('a', class_='item-body')  # Correctly target the <a> tag with class "item-body"
     date_element = parent.find('div', class_='interface jsx-153568585 jsx-957202555 item-subtitle small')
@@ -111,11 +117,11 @@ for parent in common_parents:
         source = "IGN"
         
         # Insert the data into the database
-        cursor.execute("INSERT INTO game_reviews (game_title, review_score, review_date, source, review_url) VALUES (?, ?, ?, ?, ?)",
-                       (title, score, review_date_str, source, review_url))
+        # cursor.execute("INSERT INTO game_reviews (game_title, review_score, review_date, source, review_url) VALUES (?, ?, ?, ?, ?)",
+        #                (title, score, review_date_str, source, review_url))
                        
-        # Commit the transaction
-        conn.commit()
+        # # Commit the transaction
+        # conn.commit()
         
         print(f"Review Title: {title}")
         print(f"Review Date: {review_date_str}")
