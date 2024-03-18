@@ -4,6 +4,48 @@ from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.common.by import By
 import urllib.parse
 import time
+import sqlite3
+
+#connect to database
+conn = sqlite3.connect('reviewsDB')
+
+def insert_platforms(conn, platforms):
+    platform_ids = []
+    cursor = conn.cursor()
+    for platform in platforms:
+        cursor.execute("SELECT PlatformID FROM Platforms WHERE Name = ?", (platform,))
+        result = cursor.fetchone()
+        if result:
+            platform_ids.append(result[0])
+        else:
+            cursor.execute("INSERT INTO Platforms (Name) VALUES (?)", (platform,))
+            conn.commit()
+            platform_ids.append(cursor.lastrowid)
+    return platform_ids
+
+def insert_game(conn, game_name, genre, release_date, description, image_url):
+    cursor = conn.cursor()
+    cursor.execute("SELECT GameID FROM Games WHERE CanonicalName = ?", (game_name,))
+    result = cursor.fetchone()
+    if result:
+        return result[0]
+    else:
+        cursor.execute("INSERT INTO Games (CanonicalName, Genre, ReleaseDate, Description, ImageURL) VALUES (?, ?, ?, ?, ?)",
+                       (game_name, genre, release_date, description, image_url))
+        conn.commit()
+        return cursor.lastrowid
+    
+def link_game_to_platforms(conn, game_id, platform_ids):
+    cursor = conn.cursor()
+    for platform_id in platform_ids:
+        cursor.execute("INSERT OR IGNORE INTO GamePlatforms (GameID, PlatformID) VALUES (?, ?)", (game_id, platform_id))
+    conn.commit()
+
+def insert_review(conn, game_id, original_score, normalized_score, score_scale, source_website, review_url):
+    cursor = conn.cursor()
+    cursor.execute("INSERT INTO Reviews (GameID, OriginalScore, NormalizedScore, ScoreScale, SourceWebsite, ReviewURL) VALUES (?, ?, ?, ?, ?, ?)",
+                   (game_id, original_score, normalized_score, score_scale, source_website, review_url))
+    conn.commit()
 
 # Setup Selenium WebDriver
 service = Service(ChromeDriverManager().install())
@@ -75,8 +117,13 @@ for score_text, score, link, image_url in games_info:
         print(f"Error extracting data for {link}: {e}")
         title, review_date, genres = "N/A", "N/A", []
 
-    # Print the scraped data
-    print(f"Title: {title}, Orig Score: {score_text} Score: {score}, Platforms: {platforms} Description: {description}, Review URL: {link}, Image URL: {image_url}, date: {review_date}, genre: {genres}")
+    # insert game and review data into corresponding database tables
+    platform_ids = insert_platforms(conn, platforms)
+    game_id = insert_game(conn, title, " ".join(genres), review_date, description, image_url)
+    link_game_to_platforms(conn, game_id, platform_ids)
+    insert_review(conn, game_id, score_text, score, 10, 'MetaCritic.com', link)
+    #print(f"Title: {title}, Orig Score: {score_text} Score: {score}, Platforms: {platforms} Description: {description}, Review URL: {link}, Image URL: {image_url}, date: {review_date}, genre: {genres}")
 
+conn.close()
 # Clean up (close the browser)
 driver.quit()
