@@ -15,51 +15,38 @@ function GameReviews({ filter }) {
 
         // Apply score filter if a score is specified
         if (filter.score) {
-          reviewsData = reviewsData.filter(review => filter.score === 'All Scores' ? true : review.review_score.toString() === filter.score);
+          if (filter.score === 'All Scores') {
+            // No filtering needed
+          } else if (filter.score.includes('-')) {
+            const [minScore, maxScore] = filter.score.split('-').map(parseFloat);
+            console.log(`Filtering scores between ${minScore} and ${maxScore}`);
+            reviewsData = reviewsData.filter(review => {
+              const reviewScore = parseFloat(review.NormalizedScore); // Ensure this matches your actual score field
+              return reviewScore >= minScore && reviewScore <= maxScore;
+            });
+          } else {
+            const exactScore = parseFloat(filter.score);
+            console.log(`Filtering for exact score: ${exactScore}`);
+            reviewsData = reviewsData.filter(review => parseFloat(review.NormalizedScore) === exactScore); // Ensure this matches your actual score field
+          }
         }
+        
+
 
         // Apply sorting based on the sort condition
         switch (filter.sort) {
           case 'latest-oldest':
-            reviewsData.sort((a, b) => new Date(b.review_date) - new Date(a.review_date));
+            reviewsData.sort((a, b) => new Date(b.ReleaseDate) - new Date(a.ReleaseDate));
             break;
           case 'oldest-latest':
-            reviewsData.sort((a, b) => new Date(a.review_date) - new Date(b.review_date));
+            reviewsData.sort((a, b) => new Date(a.ReleaseDate) - new Date(b.ReleaseDate));
             break;
           case 'score':
-            reviewsData.sort((a, b) => b.review_score - a.review_score);
+            reviewsData.sort((a, b) => b.NormalizedScore - a.NormalizedScore);
             break;
           default:
             break;
         }
-
-        // Filter by score if filter action is for score
-        // if (filter.actionType === 'filter' && filter.type === 'score' && filter.value) {
-        //   reviewsData = reviewsData.filter(review => review.review_score.toString() === filter.value);
-        // }
-              // Sorting logic
-        // if (filter.actionType === 'sort') {
-        //   switch (filter.value) {
-        //     case 'latest-oldest':
-        //      reviewsData.sort((a, b) => new Date(b.review_date) - new Date(a.review_date));
-        //       break;
-        //     case 'oldest-latest':
-        //       reviewsData.sort((a, b) => new Date(a.review_date) - new Date(b.review_date));
-        //       break;
-        //     case 'score':
-        //       reviewsData.sort((a, b) => b.review_score - a.review_score);
-        //       break;
-        //       default:
-        //         // Handle other cases or default behavior
-        //         break;
-        //   // Handle other sorting criteria as needed
-        //   }
-        // } else if (filter.actionType === 'filter') {
-        //   // Assuming filter.type is included in the filter object for score filtering
-        //   if (filter.value !== 'All Scores') {
-        //     reviewsData = reviewsData.filter(review => review.review_score.toString() === filter.value);
-        //   }
-        // }
         console.log("Modified Reviews Data:", reviewsData);
         // For other filters, implement similar conditional checks
         setReviews(reviewsData);
@@ -69,7 +56,7 @@ function GameReviews({ filter }) {
       setIsLoading(false); // Ensure loading state is updated even on error  
     }, [filter]); // Re-fetch or filter whenever the filter prop changes
 
-
+    
   return (
     <div>
     {isLoading ? (
@@ -77,10 +64,10 @@ function GameReviews({ filter }) {
     ) : reviews.length > 0 ? (
         reviews.map((review, index) => (
           <div key={index} className="game-container">
-            <div className="image-placeholder"></div> {/* If you have images, dynamically set the src attribute here */}
+            <img src={review.ImageURL} alt={review.CanonicalName} className="image-placeholder" />
             <div className="game-info">
-              <h1>{review.game_title} - <span className="review-score">{review.review_score}</span></h1> {/* Display the review data */}
-              <p>{review.description} - {review.review_date}</p>
+            <h1>{review.CanonicalName} - <span className="review-score">{review.NormalizedScore}</span></h1>
+            <p>{review.Description} - {review.ReleaseDate}</p>
             </div>
           </div>
         ))

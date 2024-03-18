@@ -7,10 +7,14 @@ body {
 }
 h1 {
     font-size: 2rem; /* 32px */
+    text-transform: capitalize;
 }
 p {
     font-size: 1rem; /* 16px */
 }
+h2 {
+    text-transform: capitalize;
+  }
 
 /* EVERYTHING CONTAINTER*/
 .content-container {
@@ -98,21 +102,25 @@ p {
 .latest-review-container h2 {
     margin-bottom: 20px;
 }
-
 .image-placeholder.large {
-    width: 100%;
-    height: auto;
-    flex-direction: column;
-    background-color: #e0e0e0; /* Placeholder color */
-    border: 1px dashed #999; /* Placeholder border */
-    box-sizing: border-box; /* Include padding and borders in the width and height */
-    margin-bottom: 20px; /* Space between the image and the paragraph */
+    display: flex; /* Use flex layout to center the image */
+    justify-content: center; /* Center horizontally */
+    align-items: center; /* Center vertically */
+    width: 400px; /* Adjust width as needed */
+    height: 250px; /* Adjust height as needed */
+    overflow: hidden; /* Hide parts of the image that don't fit */
+    border-radius: 8px;
 }
-/* Styles for tablets and desktops */
+.image-placeholder.large img {
+    max-width: 100%; /* Make the image fill the container */
+    height: auto; /* Adjust height automatically to maintain aspect ratio */
+    object-fit: contain;
+}
+
 @media (min-width: 768px) {
     .image-placeholder.large {
-        width: 400px; /* Fixed width on larger screens */
-        height: 400px; /* Fixed height */
+        width: 400px;
+        height: 250px;
     }
 }
 

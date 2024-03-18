@@ -5,6 +5,7 @@ import './styles/gameContainers.css';
 import Navbar from './components/navbar.js';
 import GameReviews from './components/GameReviews.js';
 import FilterButtons from './components/filterButtons.js';
+import LatestReview from './components/latestReviews.js';
 
 function App() {
   const [filter, setFilter] = useState({ sort: '', score: '' });
@@ -22,12 +23,7 @@ function App() {
           <FilterButtons onFilter={handleFilter} />
           <GameReviews filter={filter} />
         </div>
-        <div className="latest-review-container">
-          <h1>Latest Video Game Review</h1>
-          <div className="image-placeholder large"></div>
-          <h2>"title"</h2>
-          <p>"description"</p>
-        </div>
+        <LatestReview />
       </div>
     </div>
   );

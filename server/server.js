@@ -11,18 +11,21 @@ app.use(express.json()); // Middleware to parse JSON bodies
 
 // Define routes
 app.get('/api/reviews', (req, res) => {
-    const sql = "SELECT * FROM game_reviews";
-    db.all(sql, [], (err, rows) => {
-      if (err) {
-        res.status(400).json({"error":err.message});
-        return;
-      }
-      res.json({
-        "message":"success",
-        "data":rows
-      });
+  const sql = `
+  SELECT Reviews.*, Games.CanonicalName, Games.Description, Games.ImageURL, Games.ReleaseDate, Games.Genre
+  FROM Reviews
+  JOIN Games ON Reviews.GameID = Games.GameID`;
+  db.all(sql, [], (err, rows) => {
+    if (err) {
+      res.status(400).json({"error":err.message});
+      return;
+    }
+    res.json({
+      "message":"success",
+      "data":rows
     });
   });
+});
 
 app.listen(port, () => {
   console.log(`Server running at http://localhost:${port}`);
