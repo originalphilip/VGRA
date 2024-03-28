@@ -1,139 +1,99 @@
 import sqlite3
 from selenium import webdriver
 from selenium.webdriver.chrome.service import Service
-from selenium.webdriver.common.keys import Keys
-from selenium.webdriver.common.by import By
-from selenium.webdriver.support.ui import WebDriverWait
-from selenium.webdriver.support import expected_conditions as EC
-from selenium.common.exceptions import NoSuchElementException, TimeoutException
 from webdriver_manager.chrome import ChromeDriverManager
 from bs4 import BeautifulSoup
 import time
-import traceback
 from datetime import datetime, timedelta
+from fuzzywuzzy import process
 
 # Connect to the SQLite database
-conn = sqlite3.connect('reviewDB')
+conn = sqlite3.connect('reviewsDB')
 cursor = conn.cursor()
 
+def insert_or_fetch_game(conn, title, source):
+    cursor = conn.cursor()
+    # Fetch all game titles from the database
+    cursor.execute("SELECT GameID, CanonicalName FROM Games")
+    games = cursor.fetchall()
+
+    # Use fuzzy matching to find the closest game title
+    titles = [game[1] for game in games]  # List of game titles
+    closest_match, score = process.extractOne(title, titles)
+
+    # Decide on a threshold for considering a match
+    if score > 85:  # Adjust threshold as needed
+        game_id = [game[0] for game in games if game[1] == closest_match][0]
+        return game_id
+    else:
+        # If no close match is found, insert the new game
+        cursor.execute("INSERT INTO Games (CanonicalName) VALUES (?)", (title,))
+        conn.commit()
+        return cursor.lastrowid
     
+def insert_review(conn, game_id, original_score, normalized_score, score_scale, source_website, review_url):
+    if game_id:  # Only insert if game_id is not None (i.e., review does not already exist)
+        cursor.execute("INSERT INTO Reviews (GameID, OriginalScore, NormalizedScore, ScoreScale, SourceWebsite, ReviewURL) VALUES (?, ?, ?, ?, ?, ?)",
+                       (game_id, original_score, normalized_score, score_scale, source_website, review_url))
+        conn.commit()
+
+# Extend scrolling to ensure more reviews are loaded
+def scroll_and_load_reviews(driver):
+    last_height = driver.execute_script("return document.body.scrollHeight")
+    while True:
+        driver.execute_script("window.scrollTo(0, document.body.scrollHeight);")
+        time.sleep(5)  # Adjust sleep time as needed for the page to load
+        new_height = driver.execute_script("return document.body.scrollHeight")
+        if new_height == last_height:
+            break
+        last_height = new_height
+
 # Setup Selenium WebDriver
 service = Service(ChromeDriverManager().install())
 driver = webdriver.Chrome(service=service)
-
-# Navigate to the URL
 driver.get('https://www.ign.com/reviews/games')
+time.sleep(5)
 
-# Wait for dynamic content to load
-driver.implicitly_wait(10)  # Waits up to 10 seconds for elements to become available
-
-# Get scroll height
-last_height = driver.execute_script("return document.body.scrollHeight")
-
-while True:
-    # Scroll down to the bottom
-    driver.execute_script("window.scrollTo(0, document.body.scrollHeight);")
-
-    # Wait for new content to load
-    time.sleep(5)
-
-    # Calculate new scroll height and compare with last scroll height
-    new_height = driver.execute_script("return document.body.scrollHeight")
-    if new_height == last_height:
-        
-        break
-    last_height = new_height
-
+# After setting up the Selenium WebDriver and navigating to the reviews page
+scroll_and_load_reviews(driver)  # Call this function to scroll through the page and load more reviews
 
 soup = BeautifulSoup(driver.page_source, 'html.parser')
 
 # Find the common parent elements.
-common_parents = soup.find_all('div', class_='content-item jsx-1409608325 row divider')
+reviews = soup.find_all('div', class_='content-item jsx-1409608325 row divider')
+#base_url = 'https://www.ign.com'
+review_count = 0  # Counter for reviews processed
 
-base_url = 'https://www.ign.com'
-
-# A function to parse the relative date string and return the actual date
-def parse_relative_date(date_str):
-    today = datetime.today()
-
-    # Check for relative date formats first
-    if 'd ago' in date_str:
-        num = int(date_str.split('d ago')[0])
-        return today - timedelta(days=num)
-    elif 'h ago' in date_str:
-        num = int(date_str.split('h ago')[0])
-        return today - timedelta(hours=num)
-    elif 'm ago' in date_str:
-        num = int(date_str.split('m ago')[0])
-        return today - timedelta(minutes=num)
-    elif 'w ago' in date_str:
-        num = int(date_str.split('w ago')[0])
-        return today - timedelta(weeks=num)
-    else:
-        # Handle absolute dates
-        try:
-            # Attempt to parse the date using the known format
-            return datetime.strptime(date_str, '%b %d, %Y')
-        except ValueError:
-            # If parsing fails, print an error and return today's date as a fallback
-            print(f"Unrecognized date format: {date_str}")
-            return today
-
-
-print(parse_relative_date("5d ago"))  # Relative date
-print(parse_relative_date("Jul 5, 2023"))  # Absolute date
-
-
-
-for parent in common_parents:
-    # Within each parent, find the title and the score
-    title_element = parent.find('span', class_='interface jsx-777404155 item-title bold')
-    if title_element:
-        title = title_element.text.strip()
-        # Remove the word "Review" from the title if present
-        title = title.replace('Review', '') 
-    else:
-        title = "Unknown Title"
-    score = parent.find('figcaption').text.strip()  # Assuming score is directly within figcaption
-    a_tag = parent.find('a', class_='item-body')  # Correctly target the <a> tag with class "item-body"
-    date_element = parent.find('div', class_='interface jsx-153568585 jsx-957202555 item-subtitle small')
+for review in reviews:
+    if review_count >= 40:
+        break  # Stop after processing 40 reviews
+    title_element = review.find('span', class_='interface jsx-777404155 item-title bold')
+    title = title_element.text.strip().replace('Review', '') if title_element else "Unknown Title"
     
-    if date_element:
-        date_text = date_element.text.split('-')[0].strip()  # Assuming the format is "5d ago - Description"
-        review_date = parse_relative_date(date_text)
-        # Format the review_date as a string if necessary
-        review_date_str = review_date.strftime('%Y-%m-%d')
-    else:
-        review_date_str = 'Unknown'
+    score_element = review.find('figcaption')
+    original_score = score_element.text.strip() if score_element else "N/A"
+    
+    normalized_score = original_score 
+    score_scale = "10"
+    
+    review_url_element = review.find('a', class_='item-body')
+    review_url = review_url_element['href'].strip() if review_url_element and 'href' in review_url_element.attrs else "No URL"
+
+    # Assuming normalized_score calculation and score_scale determination are done previously in your code
+    game_id = insert_or_fetch_game(conn, title, "IGN")
+    insert_review(conn, game_id, original_score, normalized_score, score_scale, "IGN", review_url)
 
     
-    if a_tag and 'href' in a_tag.attrs:
-        review_url = a_tag['href'].strip()  # Get the href attribute
-        
-        # Check if the URL is relative and prepend the base URL if necessary
-        if not review_url.startswith('http'):
-            review_url = base_url + review_url
-        
-        source = "IGN"
-        
-        # Insert the data into the database
-        # cursor.execute("INSERT INTO game_reviews (game_title, review_score, review_date, source, review_url) VALUES (?, ?, ?, ?, ?)",
-        #                (title, score, review_date_str, source, review_url))
-                       
-        # # Commit the transaction
-        # conn.commit()
-        
-        print(f"Review Title: {title}")
-        print(f"Review Date: {review_date_str}")
-        print(f"Score: {score}\n")
-        print(f"Source: {source}\n")
-        print(f"URL: {review_url}\n")
-    else:
-        print("No review URL found within the specified <a> tag.")
-        
-# Close the cursor and the database connection
+    #print(f"Processed review for {title} from IGN.")
+    print(f"Review Title: {title}")
+    print(f"Score: {original_score}\n")
+    print(f"NS: {normalized_score}\n")
+    print(f"Score Scale: {score_scale}\n")
+    print(f"URL: {review_url}")
+    
+    review_count += 1
+
+# Close the browser and database connection
 cursor.close()
 conn.close()
-
-# Don't forget to close the driver
 driver.quit()
