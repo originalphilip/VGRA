@@ -1,19 +1,19 @@
 import requests
 import sqlite3
-from fuzzywuzzy import process
+from fuzzywuzzy import process, fuzz
 from datetime import datetime, timezone
 
 client_id = 'u8ztv2mgn5yvntus43u1rnpiyhksu0'
 client_secret = 'vuvc91kbyfpf4g72vvjum9alszr933'
 
 # Getting the access token
-url = 'https://id.twitch.tv/oauth2/token'
+auth_url = 'https://id.twitch.tv/oauth2/token'  # Use 'auth_url' for clarity
 params = {
     'client_id': client_id,
     'client_secret': client_secret,
     'grant_type': 'client_credentials'
 }
-response = requests.post(url, params=params)
+response = requests.post(auth_url, params=params)
 response_json = response.json()
 
 access_token = response_json['access_token']
@@ -27,42 +27,36 @@ headers = {
 conn = sqlite3.connect('ReviewsDB')
 cursor = conn.cursor()
 
-def insert_or_fetch_game(name, genre_names, release_date, description, image_url):
-    cursor.execute("SELECT GameID, CanonicalName, ReleaseDate FROM Games")
+def find_closest_game(name, candidates):
+    """Find the closest match for a game name from a list of candidates."""
+    best_match, best_score = process.extractOne(name, candidates, scorer=fuzz.token_set_ratio)
+    return best_match if best_score > 85 else None
+
+def update_game_if_exists(name, genre_names, release_date, description, image_url):
+    cursor.execute("SELECT GameID, CanonicalName FROM Games")
     games = cursor.fetchall()
-    # Adjusted fuzzy matching logic with release date consideration
-    closest_match, similarity = None, 0
-    for game in games:
-        current_similarity = process.extractOne(name, [game[1]])[1]
-        # Additional check for release year to improve matching accuracy
-        game_release_year = datetime.strptime(game[2], '%Y-%m-%d').year if game[2] else None
-        query_release_year = datetime.strptime(release_date, '%Y-%m-%d').year if release_date else None
-        if current_similarity > similarity and game_release_year == query_release_year:
-            closest_match, similarity = game, current_similarity
-
-    if similarity > 85:  # Adjusted threshold
-        game_id = closest_match[0]
-        # Verify if update is necessary before executing
-        cursor.execute("SELECT Genre, ReleaseDate, Description, ImageURL FROM Games WHERE GameID = ?", (game_id,))
-        existing_info = cursor.fetchone()
-        if (genre_names, release_date, description, image_url) != existing_info:
-            cursor.execute("UPDATE Games SET Genre = ?, ReleaseDate = ?, Description = ?, ImageURL = ? WHERE GameID = ?",
-                           (genre_names, release_date, description, image_url, game_id))
-            conn.commit()
-    else:
-        # Insert a new game entry with a verification step if needed
-        cursor.execute("INSERT INTO Games (CanonicalName, Genre, ReleaseDate, Description, ImageURL) VALUES (?, ?, ?, ?, ?)",
-                       (name, genre_names, release_date, description, image_url))
+    game_names = [game[1] for game in games]
+    
+    closest_match = find_closest_game(name, game_names)
+    
+    if closest_match:
+        game_id = [game[0] for game in games if game[1] == closest_match][0]
+        print(f"Found a close match for '{name}': '{closest_match}'. Updating details.")
+        cursor.execute("""
+            UPDATE Games 
+            SET Genre = ?, ReleaseDate = ?, Description = ?, ImageURL = ?
+            WHERE GameID = ?""",
+            (genre_names, release_date, description, image_url, game_id))
         conn.commit()
-        game_id = cursor.lastrowid
-
-    return game_id
-
+        return game_id
+    else:
+        print(f"No close match found for '{name}'. No action taken.")
+        return None
 
 def search_igdb_for_title(title):
-    '''Search IGDB for a title and return a list of potential matches'''
+    igdb_url = 'https://api.igdb.com/v4/games'  # Ensure this is the correct endpoint
     data = f'search "{title}"; fields name, genres.name, platforms.name, first_release_date, summary, cover.url;'
-    response = requests.post(url, headers=headers, data=data)
+    response = requests.post(igdb_url, headers=headers, data=data)
     return response.json()
 
 def get_best_match(search_title, search_results):
@@ -85,6 +79,22 @@ def insert_or_fetch_platform(platform_name):
         return cursor.lastrowid
     return result[0]
 
+
+def handle_special_cases(title):
+    # Define known special cases and how to handle them
+    special_cases = {
+        "early access": lambda t: t.replace("early access", "").strip(),
+        "dlc": lambda t: t  # Might decide not to alter "DLC" titles, or implement a specific strategy
+    }
+    
+    # Check and handle each special case
+    for case, handler in special_cases.items():
+        if case.lower() in title.lower():
+            print(f"Handling special case for '{title}': '{case}'")
+            title = handler(title)
+    
+    return title
+
 # Query database for the list of game titles reviewed
 cursor.execute("SELECT DISTINCT CanonicalName FROM Games")
 games = cursor.fetchall()
@@ -94,9 +104,10 @@ url = 'https://api.igdb.com/v4/games'
 
 for game_title_tuple in games:
     game_title = game_title_tuple[0]
-    search_results = search_igdb_for_title(game_title)
+    game_title_modified = handle_special_cases(game_title)
+    search_results = search_igdb_for_title(game_title_modified)
     
-    best_match = get_best_match(game_title, search_results)
+    best_match = get_best_match(game_title_modified, search_results)
     if best_match:
         # Use best_match directly since it contains the game information
         name = best_match.get('name', 'No Name Available')
@@ -106,7 +117,7 @@ for game_title_tuple in games:
         description = best_match.get('summary', 'No Description Available')
         image_url = f"https:{best_match.get('cover', {}).get('url', '').replace('t_thumb', 't_cover_big')}" if best_match.get('cover') else 'No Image Available'
 
-        game_id = insert_or_fetch_game(name, genre_names, release_date, description, image_url)
+        game_id = update_game_if_exists(name, genre_names, release_date, description, image_url)
         print(f"Name: {name}")
         print(f"Genres: {genre_names}")
         print(f"Release Date: {release_date}")
