@@ -1,119 +1,161 @@
-/* Reset any float or display settings that might affect layout */
 html {
-    font-size: 16px; /* This is often the default, but it's good to define it */
+    font-size: 16px;
 }
+
 body {
-    font-size: 1rem; /* Equivalent to 16px if the html font-size is 16px */
+    font-size: 1rem;
 }
+
 h1 {
-    font-size: 2rem; /* 32px */
+    font-size: 2rem;
+    /* 32px */
     text-transform: capitalize;
 }
+
 p {
-    font-size: 1rem; /* 16px */
+    font-size: 1rem;
+    /* 16px */
 }
+
 h2 {
     text-transform: capitalize;
-  }
+}
 
 /* EVERYTHING CONTAINTER*/
 .content-container {
     display: flex;
-    flex-direction: column; /* Stack children vertically */
-    margin: 0; /* Remove margin */
-    padding: 0; /* Remove padding */
+    flex-direction: column;
+    /* Stack children vertically */
+    margin: 0;
+    padding: 0;
 }
 
 /* MAIN CONTAINTER(REVIEWS)*/
 main {
     display: flex;
-    flex: 1; /* Takes up the remaining space */
     flex-direction: column;
-    margin: 0; /* Remove margin */
-    padding: 0.5%; /* Remove padding, or adjust as needed for internal spacing */
+    margin: 0;
+    padding: 0.5%;
 }
+
 .main-layout {
     display: flex;
-    justify-content: space-between; /* Align children to the sides */
-    align-items: flex-start; /* Align children to the top */
-  }
+    flex-wrap: wrap;
+    /* Allow items to wrap onto the next line */
+    justify-content: space-between;
+    /* Align children to the sides */
+    align-items: flex-start;
+    /* Align children to the top */
+}
+
 @media (max-width: 768px) {
-.main-layout {
-      flex-direction: column; /* Stack vertically on small screens */
+    .main-layout {
+        flex-direction: column;
+        /* Stack vertically on small screens */
+    }
+
+    .latest-review-container {
+        width: 100%;
+        /* Full width on smaller screens */
+    }
 }
-  
-.latest-review-container {
-      width: 100%; /* Full width on smaller screens */
-}
-}
+
 .main-content {
-    flex-grow: 1; /* Allow main content to take up the available space */
-    /* Adjust padding/margin as needed */
+    flex-grow: 1;
+    /* Allow main content to take up the available space */
+    width: 100%;
+    /* Take full width to prevent overlap */
 }
 
 /* GAME CONTAINER(EACH REVIEW)*/
 .game-container {
     display: flex;
     flex-direction: row;
-    align-items: flex-start; /* Align the items to the top */
+    align-items: flex-start;
+    /* Align the items to the top */
     padding: 0.5%;
-    margin-bottom: 2%; /* Space between game containers */
+    margin-bottom: 2%;
+    /* Space between game containers */
 }
+
 .image-placeholder {
-    flex-shrink: 0; /* Prevent the placeholder from shrinking */
-    flex-grow: 0; /* Prevent the placeholder from growing */
-    width: 30%; /* Full width on smaller screens */
-    height: auto; /* Maintain aspect ratio */
-    background-color: #e0e0e0; /* Light gray background */
-    border: 1px dashed #999; /* Dashed border */
-    margin-right: 10px; /* Add space to the right of the image placeholder */
+    width: 100%;
+    /* Full width on smaller screens */
+    height: auto;
+    /* Maintain aspect ratio */
+    background-color: #e0e0e0;
+    /* Light gray background */
+    border: 1px dashed #999;
+    /* Dashed border */
+    margin-right: 10px;
+    /* Add space to the right of the image placeholder */
 }
+
 /* Styles for tablets and desktops */
 @media (min-width: 768px) {
     .image-placeholder {
-        width: 200px; /* Fixed width on larger screens */
-        height: 150px; /* Fixed height */
+        width: 200px;
+        /* Fixed width on larger screens */
+        height: 150px;
+        /* Fixed height */
     }
 }
+
 .game-info {
-    display: block; /* Take the full width available */
+    display: block;
+    /* Take the full width available */
 }
+
 h3 {
-    margin-top: 0; /* Remove top margin if any */
+    margin-top: 0;
+    /* Remove top margin if any */
 }
+
 p {
     /* Paragraph styles, ensure top margin is removed for alignment */
-    flex-shrink: 0; /* Prevent the placeholder from shrinking */
-    flex-grow: 0; /* Prevent the placeholder from growing */
-    flex-basis: 500px; /* Set the default size of the item */
-    width: 500px;  /* Your desired width */
+    flex-shrink: 0;
+    /* Prevent the placeholder from shrinking */
+    flex-grow: 0;
+    /* Prevent the placeholder from growing */
+    flex-basis: 500px;
+    /* Set the default size of the item */
+    width: 500px;
     margin-top: 0;
 }
- 
+
 /* LATEST REVIEW CONTAINTER*/
 .latest-review-container {
-    flex-grow: 1; /* Adjust the width of the sidebar as needed */
+    flex-grow: 1;
     display: flex;
     flex-direction: column;
-    align-items: center; /* Center-align the items vertically */
+    align-items: center;
+    /* Center-align the items vertically */
     padding: 20px;
 }
 
 .latest-review-container h2 {
     margin-bottom: 20px;
 }
+
 .image-placeholder.large {
-    display: flex; /* Use flex layout to center the image */
-    justify-content: center; /* Center horizontally */
-    align-items: center; /* Center vertically */
-    width: 400px; /* Adjust width as needed */
-    height: 250px; /* Adjust height as needed */
-    overflow: hidden; /* Hide parts of the image that don't fit */
+    display: flex;
+    /* Use flex layout to center the image */
+    justify-content: center;
+    /* Center horizontally */
+    align-items: center;
+    /* Center vertically */
+    width: 400px;
+    height: 250px;
+    overflow: hidden;
+    /* Hide parts of the image that don't fit */
     border-radius: 8px;
 }
+
 .image-placeholder.large img {
-    max-width: 100%; /* Make the image fill the container */
-    height: auto; /* Adjust height automatically to maintain aspect ratio */
+    max-width: 100%;
+    /* Make the image fill the container */
+    height: auto;
+    /* Adjust height automatically to maintain aspect ratio */
     object-fit: contain;
 }
 
@@ -126,9 +168,8 @@ p {
 
 .latest-review-container p {
     text-align: justify;
-    /* Add other styles for the paragraph as needed */
 }
+
 .review-score {
-    color: blue; /* This is just an example color (orange) */
-  }
-  
+    color: blue;
+}

@@ -58,34 +58,47 @@ function GameReviews({ filter }) {
         setIsLoading(false); // Data has been loaded
       })
       .catch((error) => console.error("Error fetching data:", error));
-    setIsLoading(false);
   }, [filter]); // Re-fetch or filter whenever the filter prop changes
 
   return (
     <div>
       {isLoading ? (
         <p>Loading...</p>
-      ) : reviews && reviews.length > 0 ? ( // Ensure reviews is defined and has items
-        reviews.map((review, index) => (
-          <div key={index} className="game-container">
-            <img
-              src={review.ImageURL}
-              alt={review.CanonicalName}
-              className="image-placeholder"
-            />
-            <div className="game-info">
-              <h1>
-                {review.CanonicalName} -{" "}
-                <span className="review-score">
-                  {review.AverageScore ? review.AverageScore.toFixed(2) : "N/A"}
-                </span>
-              </h1>
-              <p>
-                {review.Description} - {review.ReleaseDate}
-              </p>
+      ) : reviews.length > 0 ? (
+        reviews.map((review, index) => {
+          // Split ReviewURL string into an array of URLs
+          const reviewURLs = review.ReviewURLs ? review.ReviewURLs.split(',') : [];
+          const reviewSites = review.SourceWebsites ? review.SourceWebsites.split(',') : [];
+          return (
+            <div key={index} className="game-container">
+              <img src={review.ImageURL} alt={review.CanonicalName} className="image-placeholder" />
+              <div className="game-info">
+                <h1>
+                  {review.CanonicalName} -{" "}
+                  <span className="review-score">
+                    {review.AverageScore ? review.AverageScore.toFixed(2) : "N/A"}
+                  </span>
+                </h1>
+                <p>{review.Description} - {review.ReleaseDate}</p>
+                {/* Display Review URLs */}
+                {reviewURLs.length > 0 && (
+                  <div className="review-links">
+                    <h4>Review Sources:</h4>
+                    <ul>
+                      {reviewURLs.map((url, idx) => (
+                        <li key={idx}>
+                          <a href={url} target="_blank" rel="noopener noreferrer">
+                            {reviewSites[idx] || 'Review Source'}
+                          </a>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                )}
+              </div>
             </div>
-          </div>
-        ))
+          );
+        })
       ) : (
         <p>No reviews found.</p>
       )}

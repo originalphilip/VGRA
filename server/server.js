@@ -20,6 +20,8 @@ app.get("/api/reviews", (req, res) => {
       Games.ImageURL,
       Games.ReleaseDate,
       Games.Genre,
+      GROUP_CONCAT(Reviews.SourceWebsite) AS SourceWebsites,
+      GROUP_CONCAT(Reviews.ReviewURL) AS ReviewURLs,
       AVG(Reviews.NormalizedScore) AS AverageScore,
       COUNT(Reviews.ReviewID) AS NumberOfReviews
     FROM 
@@ -38,10 +40,28 @@ app.get("/api/reviews", (req, res) => {
       return;
     }
 
-    const data = rows.map((row) => ({
-      ...row,
-    }));
-    console.log("Sending data to client:", data);
+    // Filter out games with reviews from only identical source websites
+    const data = rows
+      .map((row) => ({
+        ...row,
+        SourceWebsitesArray: row.SourceWebsites.split(","),
+        ReviewURLsArray: row.ReviewURLs.split(","),
+      }))
+      .filter((row) => {
+        // Check that all source websites are the same
+        const allSitesIdentical = row.SourceWebsitesArray.every(
+          (val, i, arr) => val === arr[0]
+        );
+        return !allSitesIdentical;
+      })
+      .map((row) => {
+        // Remove temporary arays used for filtering
+        delete row.SourceWebsitesArray;
+        delete row.ReviewURLsArray;
+        return row;
+      });
+
+    console.log("Sending filtered data to client:", data);
     res.json({
       message: "success",
       data: data,
