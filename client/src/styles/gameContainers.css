@@ -85,8 +85,7 @@ main {
     /* Maintain aspect ratio */
     background-color: #e0e0e0;
     /* Light gray background */
-    border: 1px dashed #999;
-    /* Dashed border */
+    border-radius: 8px;
     margin-right: 10px;
     /* Add space to the right of the image placeholder */
 }
