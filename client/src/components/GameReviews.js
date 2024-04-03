@@ -71,7 +71,7 @@ function GameReviews({ filter, onPlatformsFetched }) {
               );
               break;
             case "score":
-              reviewsData.sort((a, b) => b.NormalizedScore - a.NormalizedScore);
+              reviewsData.sort((a, b) => b.AverageScore - a.AverageScore);
               break;
             default:
               break;
