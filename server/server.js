@@ -11,10 +11,7 @@ app.use(express.json()); // Middleware to parse JSON bodies
 
 // Define routes
 app.get("/api/reviews", (req, res) => {
-  //SQL Query to average reviews that have the same GameID and return games with more than 1 review
-  const platformFilter = req.query.platform ? ` AND Platforms.Name = '${req.query.platform}'` : '';
-  const genreFilter = req.query.genre ? `AND Games.Genre = '${req.query.genre}'` : '';
-  const sql = `
+  let sql = `
     SELECT 
       Games.GameID,
       Games.CanonicalName,
@@ -35,14 +32,31 @@ app.get("/api/reviews", (req, res) => {
       GamePlatforms ON Games.GameID = GamePlatforms.GameID
     LEFT JOIN 
       Platforms ON GamePlatforms.PlatformID = Platforms.PlatformID
-    WHERE 1=1 ${platformFilter} ${genreFilter}
+    WHERE 1=1
+  `;
+
+  // Initialize an array to hold the parameters for the SQL query
+  const params = [];
+
+  if (req.query.platform) {
+    sql += ` AND Platforms.Name = ?`;
+    params.push(req.query.platform);
+  }
+
+  if (req.query.genre) {
+    sql += ` AND Games.Genre LIKE ?`;
+    // Use '%' to allow for any characters before or after the genre name
+    params.push(`%${req.query.genre}%`);
+  }
+
+  sql += `
     GROUP BY 
       Games.GameID
     HAVING 
       COUNT(Reviews.ReviewID) > 1;
   `;
 
-  db.all(sql, [], (err, rows) => {
+  db.all(sql, params, (err, rows) => {
     if (err) {
       res.status(400).json({ error: err.message });
       return;
@@ -113,7 +127,8 @@ app.get("/api/platforms-for-games", (req, res) => {
 });
 
 app.get("/api/genres", (req, res) => {
-  const sql = `SELECT DISTINCT Genre FROM Games`;
+  // SQL Query to select all genres from the Genres table
+  const sql = `SELECT Name FROM Genres ORDER BY Name`;
 
   db.all(sql, [], (err, rows) => {
     if (err) {
@@ -122,7 +137,7 @@ app.get("/api/genres", (req, res) => {
     }
     res.json({
       message: "success",
-      data: rows.map(row => row.Genre),
+      data: rows.map(row => row.Name),
     });
   });
 });
