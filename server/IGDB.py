@@ -24,7 +24,7 @@ headers = {
 }
 
 # Connect to reviews database
-conn = sqlite3.connect('ReviewsDB Copy')
+conn = sqlite3.connect('ReviewsDB')
 cursor = conn.cursor()
 
 def find_closest_game(name, candidates):
