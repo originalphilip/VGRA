@@ -24,7 +24,7 @@ headers = {
 }
 
 # Connect to reviews database
-conn = sqlite3.connect('ReviewsDB')
+conn = sqlite3.connect('ReviewsDB Copy')
 cursor = conn.cursor()
 
 def find_closest_game(name, candidates):
@@ -32,7 +32,7 @@ def find_closest_game(name, candidates):
     best_match, best_score = process.extractOne(name, candidates, scorer=fuzz.token_set_ratio)
     return best_match if best_score > 85 else None
 
-def update_game_if_exists(name, genre_names, release_date, description, image_url):
+def update_game_if_exists(name, release_date, description, image_url):
     cursor.execute("SELECT GameID, CanonicalName FROM Games")
     games = cursor.fetchall()
     game_names = [game[1] for game in games]
@@ -44,9 +44,9 @@ def update_game_if_exists(name, genre_names, release_date, description, image_ur
         print(f"Found a close match for '{name}': '{closest_match}'. Updating details.")
         cursor.execute("""
             UPDATE Games 
-            SET Genre = ?, ReleaseDate = ?, Description = ?, ImageURL = ?
+            SET ReleaseDate = ?, Description = ?, ImageURL = ?
             WHERE GameID = ?""",
-            (genre_names, release_date, description, image_url, game_id))
+            (release_date, description, image_url, game_id))
         conn.commit()
         return game_id
     else:
@@ -78,6 +78,16 @@ def insert_or_fetch_platform(platform_name):
         conn.commit()
         return cursor.lastrowid
     return result[0]
+
+def insert_or_fetch_genre(genre_name):
+    cursor.execute("SELECT GenreID FROM Genres WHERE Name = ?", (genre_name,))
+    result = cursor.fetchone()
+    if result:
+        return result[0]
+    else:
+        cursor.execute("INSERT INTO Genres (Name) VALUES (?)", (genre_name,))
+        conn.commit()
+        return cursor.lastrowid
 
 
 def handle_special_cases(title):
@@ -117,7 +127,7 @@ for game_title_tuple in games:
         description = best_match.get('summary', 'No Description Available')
         image_url = f"https:{best_match.get('cover', {}).get('url', '').replace('t_thumb', 't_cover_big')}" if best_match.get('cover') else 'No Image Available'
 
-        game_id = update_game_if_exists(name, genre_names, release_date, description, image_url)
+        game_id = update_game_if_exists(name, release_date, description, image_url)
         print(f"Name: {name}")
         print(f"Genres: {genre_names}")
         print(f"Release Date: {release_date}")
@@ -131,6 +141,12 @@ for game_title_tuple in games:
             if not cursor.fetchone():
                 cursor.execute("INSERT INTO GamePlatforms (GameID, PlatformID) VALUES (?, ?)", (game_id, platform_id))
                 conn.commit()
+        
+        genre_ids = [insert_or_fetch_genre(genre_name) for genre_name in genre_names.split(', ')]
+        for genre_id in genre_ids:
+            cursor.execute("INSERT OR IGNORE INTO GameGenres (GameID, GenreID) VALUES (?, ?)", (game_id, genre_id))
+        conn.commit()
+        
     else:
         print(f"No accurate match found for {game_title}")
 
