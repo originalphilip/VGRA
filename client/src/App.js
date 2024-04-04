@@ -10,6 +10,7 @@ import LatestReview from './components/latestReviews.js';
 function App() {
   const [filter, setFilter] = useState({ sort: '', score: '', platform: '' });
   const [platforms, setPlatforms] = useState([]);
+  const [genres, setGenres] = useState([]);
 
   useEffect(() => {
     // Fetch platforms from the server
@@ -34,13 +35,24 @@ function App() {
     setPlatforms(platforms);
   };
 
+  useEffect(() => {
+    fetch('/api/genres')
+      .then(response => response.json())
+      .then(data => {
+        if (data && data.data) {
+          setGenres(data.data);
+        }
+      })
+      .catch(error => console.error('Error fetching genres:', error));
+  }, []);
+
 
   return (
     <div>
       <Navbar />
       <div className="main-layout">
         <div className="content-container">
-          <FilterButtons onFilter={handleFilter} platforms={platforms}/>
+          <FilterButtons onFilter={handleFilter} platforms={platforms} genres={genres}/>
           <GameReviews filter={filter} onPlatformsFetched={handlePlatformsFetched}/>
         </div>
         <LatestReview />

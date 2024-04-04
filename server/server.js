@@ -13,6 +13,7 @@ app.use(express.json()); // Middleware to parse JSON bodies
 app.get("/api/reviews", (req, res) => {
   //SQL Query to average reviews that have the same GameID and return games with more than 1 review
   const platformFilter = req.query.platform ? ` AND Platforms.Name = '${req.query.platform}'` : '';
+  const genreFilter = req.query.genre ? `AND Games.Genre = '${req.query.genre}'` : '';
   const sql = `
     SELECT 
       Games.GameID,
@@ -34,7 +35,7 @@ app.get("/api/reviews", (req, res) => {
       GamePlatforms ON Games.GameID = GamePlatforms.GameID
     LEFT JOIN 
       Platforms ON GamePlatforms.PlatformID = Platforms.PlatformID
-      WHERE 1=1 ${platformFilter}
+    WHERE 1=1 ${platformFilter} ${genreFilter}
     GROUP BY 
       Games.GameID
     HAVING 
@@ -108,6 +109,21 @@ app.get("/api/platforms-for-games", (req, res) => {
           message: "success",
           data: rows
       });
+  });
+});
+
+app.get("/api/genres", (req, res) => {
+  const sql = `SELECT DISTINCT Genre FROM Games`;
+
+  db.all(sql, [], (err, rows) => {
+    if (err) {
+      res.status(500).json({ error: err.message });
+      return;
+    }
+    res.json({
+      message: "success",
+      data: rows.map(row => row.Genre),
+    });
   });
 });
 

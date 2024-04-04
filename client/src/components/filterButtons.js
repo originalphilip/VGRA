@@ -1,6 +1,6 @@
 import React from "react";
 
-function FilterButtons({ onFilter, platforms }) {
+function FilterButtons({ onFilter, platforms, genres }) {
   const toggleDropdown = (event) => {
     let dropdownContent = event.currentTarget.nextElementSibling;
     dropdownContent.style.display =
@@ -17,6 +17,10 @@ function FilterButtons({ onFilter, platforms }) {
 
   const handlePlatformFilter = (platform) => {
     onFilter({ platform: platform });
+  };
+
+  const handleGenreFilter = (genre) => {
+    onFilter({ genre: genre });
   };
 
   return (
@@ -98,6 +102,17 @@ function FilterButtons({ onFilter, platforms }) {
               onClick={() => handlePlatformFilter(platform)}
             >
               {platform}
+            </a>
+          ))}
+        </div>
+      </div>
+
+      <div className="dropdown">
+        <button className="dropbtn" onClick={toggleDropdown}>Filter by Genre <span className="dropdown-icon">&#9662;</span></button>
+        <div className="dropdown-content">
+          {genres.map((genre, idx) => (
+            <a key={idx} href="#" onClick={() => handleGenreFilter(genre)}>
+              {genre}
             </a>
           ))}
         </div>

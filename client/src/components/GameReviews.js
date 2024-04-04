@@ -26,8 +26,15 @@ function GameReviews({ filter, onPlatformsFetched }) {
     let isMounted = true; // Track if the component is mounted
     setIsLoading(true);
     let query = '/api/reviews';
+    const queryParams = [];
     if (filter.platform) {
-      query += `?platform=${encodeURIComponent(filter.platform)}`;
+      queryParams.push(`platform=${encodeURIComponent(filter.platform)}`);
+    }
+    if (filter.genre) {
+      queryParams.push(`genre=${encodeURIComponent(filter.genre)}`);
+    }
+    if (queryParams.length) {
+      query += `?${queryParams.join('&')}`;
     }
     fetch(query)
       .then((response) => response.json())
