@@ -14,7 +14,7 @@ app.get("/api/reviews", (req, res) => {
   let sql = `
     SELECT 
       Games.GameID,
-      Games.CanonicalName,
+      Games.GameName,
       Games.Description,
       Games.ImageURL,
       Games.ReleaseDate,

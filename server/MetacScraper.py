@@ -12,12 +12,12 @@ conn = sqlite3.connect('reviewsDB')
 
 def insert_game(conn, game_name):
     cursor = conn.cursor()
-    cursor.execute("SELECT GameID FROM Games WHERE CanonicalName = ?", (game_name,))
+    cursor.execute("SELECT GameID FROM Games WHERE GameName = ?", (game_name,))
     result = cursor.fetchone()
     if result:
         return result[0]
     else:
-        cursor.execute("INSERT INTO Games (CanonicalName) VALUES (?)", (game_name,))
+        cursor.execute("INSERT INTO Games (GameName) VALUES (?)", (game_name,))
         conn.commit()
         return cursor.lastrowid
     

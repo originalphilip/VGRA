@@ -29,9 +29,9 @@ function LatestReview() {
       {latestReview ? (
         <>
           <div className="image-placeholder large">
-                <img src={latestReview.ImageURL} alt={latestReview.CanonicalName} />
+                <img src={latestReview.ImageURL} alt={latestReview.GameName} />
             </div>
-          <h2>{latestReview.CanonicalName}</h2>
+          <h2>{latestReview.GameName}</h2>
           <p>{latestReview.Description}</p>
         </>
       ) : (

@@ -25,7 +25,7 @@ def insert_or_fetch_game(conn, title, detailed_title, score_threshold=85):
     cursor = conn.cursor()
     # Use the detailed title for matching if available
     search_title = detailed_title if detailed_title else title
-    games = cursor.execute("SELECT GameID, CanonicalName FROM Games").fetchall()
+    games = cursor.execute("SELECT GameID, GameName FROM Games").fetchall()
     
     if games:
         closest_match, score = process.extractOne(search_title, [game[1] for game in games], scorer=fuzz.token_sort_ratio)
@@ -35,7 +35,7 @@ def insert_or_fetch_game(conn, title, detailed_title, score_threshold=85):
             return game_id
 
     print(f"No match found. Inserting new game: {search_title}")
-    cursor.execute("INSERT INTO Games (CanonicalName) VALUES (?)", (search_title,))
+    cursor.execute("INSERT INTO Games (GameName) VALUES (?)", (search_title,))
     conn.commit()
     return cursor.lastrowid
 
@@ -83,8 +83,8 @@ for review in reviews[:40]:
 
     score_element = review.find('figcaption')
     original_score = score_element.text.strip() if score_element else "N/A"
-    normalized_score = original_score  # Or adjust based on your normalization logic
-    score_scale = "10"  # Adjust according to your scoring scale logic
+    normalized_score = original_score 
+    score_scale = "10" 
 
     review_url_element = review.find('a', class_='item-body')
     partial_url = review_url_element['href'] if review_url_element else None

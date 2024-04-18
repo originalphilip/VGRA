@@ -115,10 +115,10 @@ function GameReviews({ filter, onPlatformsFetched }) {
           const reviewSites = review.SourceWebsites ? review.SourceWebsites.split(',') : [];
           return (
             <div key={index} className="game-container">
-              <img src={review.ImageURL} alt={review.CanonicalName} className="image-placeholder" />
+              <img src={review.ImageURL} alt={review.GameName} className="image-placeholder" />
               <div className="game-info">
                 <h1>
-                  {review.CanonicalName} -{" "}
+                  {review.GameName} -{" "}
                   <span className="review-score">
                     {review.AverageScore ? review.AverageScore.toFixed(2) : "N/A"}
                   </span>

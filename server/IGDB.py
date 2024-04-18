@@ -33,7 +33,7 @@ def find_closest_game(name, candidates):
     return best_match if best_score > 85 else None
 
 def update_game_if_exists(name, release_date, description, image_url):
-    cursor.execute("SELECT GameID, CanonicalName FROM Games")
+    cursor.execute("SELECT GameID, GameName FROM Games")
     games = cursor.fetchall()
     game_names = [game[1] for game in games]
     
@@ -106,7 +106,7 @@ def handle_special_cases(title):
     return title
 
 # Query database for the list of game titles reviewed
-cursor.execute("SELECT DISTINCT CanonicalName FROM Games")
+cursor.execute("SELECT DISTINCT GameName FROM Games")
 games = cursor.fetchall()
 
 # Define the base URL for the IGDB API games endpoint
@@ -156,7 +156,7 @@ for game_title_tuple in games:
     ReleaseDate = ?,
     Description = ?,
     ImageURL = ?
-    WHERE CanonicalName = ?
+    WHERE GameName = ?
     """, (genre_names, release_date, description, image_url, name))
 
 conn.close()
