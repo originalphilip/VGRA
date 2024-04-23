@@ -13,7 +13,7 @@ const customStyles = {
   })
 };
 
-function FilterButtons({ onFilter, platforms, genres }) {  
+function FilterButtons({ onFilter,onClearFilters, platforms, genres, currentFilters }) {  
   const sortOptions = [
     { value: "latest-oldest", label: "Sort by latest-oldest" },
     { value: "oldest-latest", label: "Sort by oldest-latest" },
@@ -38,6 +38,10 @@ function FilterButtons({ onFilter, platforms, genres }) {
   const platformOptions = platforms.map(platform => ({ value: platform, label: platform }));
   const genreOptions = genres.map(genre => ({ value: genre, label: genre }));
 
+  const selectedScores = scoreOptions.filter(option => currentFilters.score.includes(option.value));
+  const selectedPlatforms = platformOptions.filter(option => currentFilters.platform.includes(option.value));
+  const selectedGenres = genreOptions.filter(option => currentFilters.genre.includes(option.value));
+
   return (
     <div style={{ display: 'flex', justifyContent: 'space-around', flexWrap: 'wrap' }}> {/* Added flexbox styling here */}
       <h1>Reviews</h1>
@@ -49,6 +53,7 @@ function FilterButtons({ onFilter, platforms, genres }) {
         onChange={(selectedOption) => onFilter({ sort: selectedOption.value })}
       />
       <Select
+        value={selectedScores}
         styles={customStyles}
         options={scoreOptions}
         isMulti
@@ -60,6 +65,7 @@ function FilterButtons({ onFilter, platforms, genres }) {
       }}
       />
       <Select
+        value={selectedPlatforms}
         styles={customStyles}
         options={platformOptions}
         isMulti
@@ -67,12 +73,14 @@ function FilterButtons({ onFilter, platforms, genres }) {
         onChange={(selectedOptions) => onFilter({ platform: selectedOptions.map(option => option.value) })}
       />
       <Select
+        value={selectedGenres}
         styles={customStyles}
         options={genreOptions}
         isMulti
         placeholder="Filter by Genre"
         onChange={(selectedOptions) => onFilter({ genre: selectedOptions.map(option => option.value) })}
       />
+    <button onClick={onClearFilters} className="clear-filters-btn">Clear All Filters</button>
     </div>
   );
 }

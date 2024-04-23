@@ -1,0 +1,15 @@
+.clear-filters-btn {
+    padding: 10px 20px;
+    font-size: 16px;
+    color: white;
+    background-color: #f44336; /* Red for clear, adjust as needed */
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-top: 20px;
+  }
+  
+  .clear-filters-btn:hover {
+    background-color: #d32f2f; /* Darker shade on hover */
+  }
+  

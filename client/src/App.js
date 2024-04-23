@@ -1,13 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import './styles/navbarstyles.css';
 import './styles/gameContainers.css';
+import './styles/buttons.css';
 import Navbar from './components/navbar.js';
 import GameReviews from './components/GameReviews.js';
 import FilterButtons from './components/filterButtons.js';
 import LatestReview from './components/latestReviews.js';
 
 function App() {
-  const [filter, setFilter] = useState({ sort: '', score: '', platform: '' });
+  const [filter, setFilter] = useState({ sort: '', score: [], platform: [], genre: [] });
   const [platforms, setPlatforms] = useState([]);
   const [genres, setGenres] = useState([]);
 
@@ -27,6 +28,10 @@ function App() {
   const handleFilter = (filterObj) => {
     setFilter(prev => ({ ...prev, ...filterObj }));
     console.log("Updated Filter State:",  { ...filter, ...filterObj });
+  };
+
+  const clearFilters = () => {
+    setFilter({ sort: '', score: [], platform: [], genre: [] });
   };
 
   const handlePlatformsFetched = (platforms) => {
@@ -51,7 +56,7 @@ function App() {
       <Navbar />
       <div className="main-layout">
         <div className="content-container">
-          <FilterButtons onFilter={handleFilter} platforms={platforms} genres={genres}/>
+          <FilterButtons onFilter={handleFilter} onClearFilters={clearFilters} platforms={platforms} genres={genres} currentFilters={filter}/>
           <GameReviews filter={filter} onPlatformsFetched={handlePlatformsFetched}/>
         </div>
         <LatestReview />
