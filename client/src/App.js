@@ -27,7 +27,7 @@ function App() {
 
   const handleFilter = (filterObj) => {
     setFilter(prev => ({ ...prev, ...filterObj }));
-    console.log("Updated Filter State:", filterObj);
+    console.log("Updated Filter State:",  { ...filter, ...filterObj });
   };
 
   const handlePlatformsFetched = (platforms) => {

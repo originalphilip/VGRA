@@ -48,13 +48,11 @@ function GameReviews({ filter, onPlatformsFetched }) {
             if (filter.score === "All Scores") {
               // No filtering needed
             } else if (filter.score.includes("-")) {
-              const [minScore, maxScore] = filter.score
-                .split("-")
-                .map(parseFloat);
+              const [minScore, maxScore] = filter.score.split("-").map(parseFloat);
               console.log(`Filtering scores between ${minScore} and ${maxScore}`);
               reviewsData = reviewsData.filter((review) => {
-                const reviewScore = parseFloat(review.NormalizedScore);
-                return reviewScore >= minScore && reviewScore <= maxScore;
+                const reviewScore = parseFloat(review.AverageScore);
+                return reviewScore >= minScore && reviewScore <= maxScore; // Adjust to include upper bound
               });
             } else {
               const exactScore = parseFloat(filter.score);
@@ -63,6 +61,7 @@ function GameReviews({ filter, onPlatformsFetched }) {
                 (review) => parseFloat(review.NormalizedScore) === exactScore
               );
             }
+            console.log("Filtered Reviews Data:", reviewsData);
           }
 
           // Apply sorting based on the sort condition

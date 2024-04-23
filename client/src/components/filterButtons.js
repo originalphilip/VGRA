@@ -52,38 +52,38 @@ function FilterButtons({ onFilter, platforms, genres }) {
           <a href="#" onClick={() => handleScoreFilter("All Scores")}>
             All Scores
           </a>
-          <a href="#" onClick={() => handleScoreFilter("10")}>
+          <a href="#" onClick={(e) => { e.preventDefault(); handleScoreFilter("10"); }}>
             10
           </a>
           {/*<a href="#" onClick={() => filterContent('9')}>9 - 9.9</a> change to this when i have the averge done */}
-          <a href="#" onClick={() => handleScoreFilter("9-9.9")}>
+          <a href="#" onClick={(e) => { e.preventDefault(); handleScoreFilter("9-9.9"); }}>
             9 - 9.9
           </a>
-          <a href="#" onClick={() => handleScoreFilter("8-8.9")}>
+          <a href="#" onClick={(e) => { e.preventDefault(); handleScoreFilter("8-8.9"); }}>
             8 - 8.9
           </a>
-          <a href="#" onClick={() => handleScoreFilter("7-7.9")}>
+          <a href="#" onClick={(e) => { e.preventDefault(); handleScoreFilter("7-7.9"); }}>
             7 - 7.9
           </a>
-          <a href="#" onClick={() => handleScoreFilter("6-6.9")}>
+          <a href="#" onClick={(e) => { e.preventDefault(); handleScoreFilter("6-6.9"); }}>
             6 - 6.9
           </a>
-          <a href="#" onClick={() => handleScoreFilter("5-5.9")}>
+          <a href="#" onClick={(e) => { e.preventDefault(); handleScoreFilter("5-5.9"); }}>
             5 - 5.9
           </a>
-          <a href="#" onClick={() => handleScoreFilter("4-4.9")}>
+          <a href="#" onClick={(e) => { e.preventDefault(); handleScoreFilter("4-4.9"); }}>
             4 - 4.9
           </a>
-          <a href="#" onClick={() => handleScoreFilter("3-3.9")}>
+          <a href="#" onClick={(e) => { e.preventDefault(); handleScoreFilter("3-3.9"); }}>
             3 - 3.9
           </a>
-          <a href="#" onClick={() => handleScoreFilter("2-2.9")}>
+          <a href="#" onClick={(e) => { e.preventDefault(); handleScoreFilter("2-2.9"); }}>
             2 - 2.9
           </a>
-          <a href="#" onClick={() => handleScoreFilter("1-1.9")}>
+          <a href="#" onClick={(e) => { e.preventDefault(); handleScoreFilter("1-1.9"); }}>
             1 - 1.9
           </a>
-          <a href="#" onClick={() => handleScoreFilter("0-0.9")}>
+          <a href="#" onClick={(e) => { e.preventDefault(); handleScoreFilter("0-0.9"); }}>
             0 - 0.9
           </a>
         </div>
