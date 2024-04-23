@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import './styles/navbarstyles.css';
-import './styles/buttonstyles.css';
 import './styles/gameContainers.css';
 import Navbar from './components/navbar.js';
 import GameReviews from './components/GameReviews.js';

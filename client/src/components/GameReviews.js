@@ -44,22 +44,21 @@ function GameReviews({ filter, onPlatformsFetched }) {
           let reviewsData = data.data;
 
           // Apply score filter if a score is specified
-          if (filter.score) {
-            if (filter.score === "All Scores") {
-              // No filtering needed
-            } else if (filter.score.includes("-")) {
-              const [minScore, maxScore] = filter.score.split("-").map(parseFloat);
-              console.log(`Filtering scores between ${minScore} and ${maxScore}`);
-              reviewsData = reviewsData.filter((review) => {
-                const reviewScore = parseFloat(review.AverageScore);
-                return reviewScore >= minScore && reviewScore <= maxScore; // Adjust to include upper bound
-              });
+          if (filter.score && filter.score.length > 0) {
+            if (filter.score.includes("All Scores")) {
+              // No filtering needed for 'All Scores'
             } else {
-              const exactScore = parseFloat(filter.score);
-              console.log(`Filtering for exact score: ${exactScore}`);
-              reviewsData = reviewsData.filter(
-                (review) => parseFloat(review.NormalizedScore) === exactScore
-              );
+              reviewsData = reviewsData.filter((review) => {
+                return filter.score.some((score) => {
+                  if (score.includes("-")) {
+                    const [minScore, maxScore] = score.split("-").map(parseFloat);
+                    return review.AverageScore >= minScore && review.AverageScore <= maxScore;
+                  } else {
+                    const exactScore = parseFloat(score);
+                    return review.AverageScore === exactScore;
+                  }
+                });
+              });
             }
             console.log("Filtered Reviews Data:", reviewsData);
           }
