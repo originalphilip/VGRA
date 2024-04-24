@@ -1,4 +1,5 @@
 import React, { useEffect, useState, useRef, useCallback } from "react";
+import ScoreBadge from './ScoreBadge';
 
 function GameReviews({ filter, onPlatformsFetched }) {
   const [reviews, setReviews] = useState([]);
@@ -113,13 +114,14 @@ function GameReviews({ filter, onPlatformsFetched }) {
           const reviewSites = review.SourceWebsites ? review.SourceWebsites.split(',') : [];
           return (
             <div key={index} className="game-container">
+              <div className="image-and-score">
               <img src={review.ImageURL} alt={review.GameName} className="image-placeholder" />
+              <span className="score-text">Review Score</span>
+              <ScoreBadge score={review.AverageScore} />
+              </div>
               <div className="game-info">
                 <h1>
-                  {review.GameName} -{" "}
-                  <span className="review-score">
-                    {review.AverageScore ? review.AverageScore.toFixed(2) : "N/A"}
-                  </span>
+                  {review.GameName}
                 </h1>
                 <p>{review.Description} - {review.ReleaseDate}</p>
                 {/* Display Review URLs */}
