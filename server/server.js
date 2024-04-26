@@ -1,6 +1,6 @@
 const express = require("express");
 const app = express();
-const port = 5000;
+//const port = 5000;
 const cors = require("cors");
 
 // Import database module
@@ -15,6 +15,7 @@ const corsOptions = {
 };
 app.use(cors(corsOptions));
 
+const port = process.env.PORT || 3000;  // Change from 5000 to another port like 3000
 app.listen(port, '0.0.0.0', () => {
   console.log(`Server running on port ${port}`);
 });
