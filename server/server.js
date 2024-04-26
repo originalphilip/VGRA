@@ -15,6 +15,10 @@ const corsOptions = {
 };
 app.use(cors(corsOptions));
 
+app.listen(port, '0.0.0.0', () => {
+  console.log(`Server running on port ${port}`);
+});
+
 
 // Define routes
 app.get("/api/reviews", (req, res) => {
