@@ -15,8 +15,8 @@ const corsOptions = {
 };
 app.use(cors(corsOptions));
 
-const port = process.env.PORT || 3000;  // Change from 5000 to another port like 3000
-app.listen(port, '0.0.0.0', () => {
+const port = process.env.PORT || 3000;  // Fallback to 3000 if PORT isn't set
+app.listen(port, () => {
   console.log(`Server running on port ${port}`);
 });
 
