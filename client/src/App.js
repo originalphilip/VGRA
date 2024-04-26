@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import './styles/navbarstyles.css';
 import './styles/gameContainers.css';
 import './styles/buttons.css';
+import './styles/reviewlinks.css';
 import Navbar from './components/navbar.js';
 import GameReviews from './components/GameReviews.js';
 import FilterButtons from './components/filterButtons.js';

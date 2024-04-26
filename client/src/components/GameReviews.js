@@ -2,10 +2,20 @@ import React, { useEffect, useState, useRef, useCallback } from "react";
 import ScoreBadge from './ScoreBadge';
 
 function GameReviews({ filter, onPlatformsFetched }) {
+  const extractDomain = (url) => {
+    try {
+      const domain = new URL(url).hostname.replace(/^www\./, '');
+      return domain;
+    } catch (e) {
+      console.error("Invalid URL", url);
+      return null;
+    }
+  };
+
   const [reviews, setReviews] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
 
-    const fetchPlatformsForGames = useCallback((gameIds) => {
+  const fetchPlatformsForGames = useCallback((gameIds) => {
     const queryParams = new URLSearchParams({ gameIds: gameIds.join(',') }).toString();
     const url = `/api/platforms-for-games?${queryParams}`;
 
@@ -23,7 +33,6 @@ function GameReviews({ filter, onPlatformsFetched }) {
   }, [onPlatformsFetched]);
 
   useEffect(() => {
-    console.log("Current Filter:", filter);
     let isMounted = true; // Track if the component is mounted
     setIsLoading(true);
     let query = '/api/reviews';
@@ -61,7 +70,6 @@ function GameReviews({ filter, onPlatformsFetched }) {
                 });
               });
             }
-            console.log("Filtered Reviews Data:", reviewsData);
           }
 
           // Apply sorting based on the sort condition
@@ -82,7 +90,6 @@ function GameReviews({ filter, onPlatformsFetched }) {
             default:
               break;
           }
-          console.log("Modified Reviews Data:", reviewsData);
           setReviews(reviewsData);
           // Fetch platforms for the games currently being displayed
           const gameIds = reviewsData.map(review => review.GameID).join(',');
@@ -105,44 +112,44 @@ function GameReviews({ filter, onPlatformsFetched }) {
 
   return (
     <div>
-      {isLoading ? (
-        <p>Loading...</p>
-      ) : reviews.length > 0 ? (
+      {isLoading ? <p>Loading...</p> : reviews.length ? (
         reviews.map((review, index) => {
-          // Split ReviewURL string into an array of URLs
-          const reviewURLs = review.ReviewURLs ? review.ReviewURLs.split(',') : [];
-          const reviewSites = review.SourceWebsites ? review.SourceWebsites.split(',') : [];
-          return (
-            <div key={index} className="game-container">
-              <div className="image-and-score">
-              <img src={review.ImageURL} alt={review.GameName} className="image-placeholder" />
-              <span className="score-text">Review Score</span>
-              <ScoreBadge score={review.AverageScore} />
-              </div>
-              <div className="game-info">
-                <h1>
-                  {review.GameName}
-                </h1>
-                <p>{review.Description} - {review.ReleaseDate}</p>
-                {/* Display Review URLs */}
-                {reviewURLs.length > 0 && (
-                  <div className="review-links">
-                    <h4>Review Sources:</h4>
-                    <ul>
-                      {reviewURLs.map((url, idx) => (
-                        <li key={idx}>
-                          <a href={url} target="_blank" rel="noopener noreferrer">
-                            {reviewSites[idx] || 'Review Source'}
-                          </a>
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
-                )}
-              </div>
-            </div>
-          );
-        })
+  const reviewURLs = review.ReviewURLs ? review.ReviewURLs.split(',') : [];
+  const reviewSites = review.SourceWebsites ? review.SourceWebsites.split(',') : [];
+  return(
+    <div key={index} className="game-container">
+      <div className="image-and-score">
+        <img src={review.ImageURL} alt={review.GameName} className="image-placeholder" />
+        <span className="score-text">Review Score</span>
+        <ScoreBadge score={review.AverageScore} />
+      </div>
+      <div className="game-info">
+        <h1>{review.GameName}</h1>
+        <p>{review.Description} - {review.ReleaseDate}</p>
+        {reviewURLs.length > 0 && (
+          <div className="review-links">
+            <h4>Review Sources:</h4>
+            <ul>
+              {reviewURLs.map((url, idx) => {
+                const domain = extractDomain(url);
+                const logoUrl = domain ? `https://logo.clearbit.com/${domain}` : "/path/to/default-logo.png";
+                const siteName = reviewSites[idx] || 'Unknown Source'; 
+                return (
+                  <li key={idx} className="review-link">
+                    <a href={url} target="_blank" rel="noopener noreferrer">
+                      <img className="review-logo" src={logoUrl} alt={`${siteName} Logo`} onError={(e) => { e.target.src = '/path/to/default-logo.png'; }} />
+                      {siteName}
+                    </a>
+                  </li>
+                )
+              })}
+            </ul>
+          </div>
+        )}
+      </div>
+    </div>
+  );
+})
       ) : (
         <p>No reviews found.</p>
       )}
