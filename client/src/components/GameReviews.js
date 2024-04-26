@@ -17,7 +17,8 @@ function GameReviews({ filter, onPlatformsFetched }) {
 
   const fetchPlatformsForGames = useCallback((gameIds) => {
     const queryParams = new URLSearchParams({ gameIds: gameIds.join(',') }).toString();
-    const url = `/api/platforms-for-games?${queryParams}`;
+    const serverUrl = process.env.REACT_APP_API_URL || 'http://localhost:5000'; // Default to localhost if the env variable is not set
+    const url = `${serverUrl}/api/platforms-for-games?${queryParams}`;
 
     fetch(url)
       .then(response => response.json())
@@ -33,9 +34,10 @@ function GameReviews({ filter, onPlatformsFetched }) {
   }, [onPlatformsFetched]);
 
   useEffect(() => {
+    const serverUrl = process.env.REACT_APP_API_URL || 'http://localhost:5000'; // Default to localhost if the env variable is not set
     let isMounted = true; // Track if the component is mounted
     setIsLoading(true);
-    let query = '/api/reviews';
+    let query = `${serverUrl}/api/reviews`;
     const queryParams = [];
     if (filter.platform) {
       queryParams.push(`platform=${encodeURIComponent(filter.platform)}`);

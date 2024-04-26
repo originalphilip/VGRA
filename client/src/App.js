@@ -12,10 +12,11 @@ function App() {
   const [filter, setFilter] = useState({ sort: '', score: [], platform: [], genre: [] });
   const [platforms, setPlatforms] = useState([]);
   const [genres, setGenres] = useState([]);
+  const serverUrl = process.env.REACT_APP_API_URL || 'http://localhost:5000';
 
   useEffect(() => {
     // Fetch platforms from the server
-    fetch('/api/platforms')
+    fetch(`${serverUrl}/api/platforms`)
       .then(response => response.json())
       .then(data => {
         if (data && data.data) {
@@ -24,7 +25,7 @@ function App() {
         }
       })
       .catch(error => console.error('Error fetching platform data:', error));
-  }, []); // Empty dependency array means this effect runs once on mount
+  }, [serverUrl]); // Empty dependency array means this effect runs once on mount
 
   const handleFilter = (filterObj) => {
     setFilter(prev => ({ ...prev, ...filterObj }));
@@ -41,7 +42,7 @@ function App() {
   };
 
   useEffect(() => {
-    fetch('/api/genres')
+    fetch(`${serverUrl}/api/genres`)
       .then(response => response.json())
       .then(data => {
         if (data && data.data) {
@@ -49,7 +50,7 @@ function App() {
         }
       })
       .catch(error => console.error('Error fetching genres:', error));
-  }, []);
+  }, [serverUrl]);
 
 
   return (

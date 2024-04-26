@@ -9,6 +9,13 @@ const db = require("./database.js");
 app.use(cors());
 app.use(express.json()); // Middleware to parse JSON bodies
 
+const corsOptions = {
+  origin: 'https://vgra.onrender.com/',
+  optionsSuccessStatus: 200
+};
+app.use(cors(corsOptions));
+
+
 // Define routes
 app.get("/api/reviews", (req, res) => {
   let sql = `
