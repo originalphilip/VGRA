@@ -1,3 +1,4 @@
+require('dotenv').config();
 const express = require("express");
 const app = express();
 //const port = 5000;
@@ -152,8 +153,4 @@ app.get("/api/genres", (req, res) => {
       data: rows.map(row => row.Name),
     });
   });
-});
-
-app.listen(port, () => {
-  console.log(`Server running at http://localhost:${port}`);
 });
