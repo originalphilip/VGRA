@@ -12,7 +12,7 @@ function App() {
   const [filter, setFilter] = useState({ sort: '', score: [], platform: [], genre: [] });
   const [platforms, setPlatforms] = useState([]);
   const [genres, setGenres] = useState([]);
-  const serverUrl = process.env.REACT_APP_API_URL || 'http://localhost:5000';
+  const serverUrl = process.env.REACT_APP_API_URL || 'http://localhost:10000';
 
   useEffect(() => {
     // Fetch platforms from the server
