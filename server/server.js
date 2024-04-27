@@ -9,11 +9,11 @@ const db = require("./database.js");
 app.use(cors());
 app.use(express.json()); // Middleware to parse JSON bodies
 
-const corsOptions = {
-  origin: 'https://vgra.onrender.com/',
-  optionsSuccessStatus: 200
-};
-app.use(cors(corsOptions));
+// const corsOptions = {
+//   origin: 'https://vgra.onrender.com/',
+//   optionsSuccessStatus: 200
+// };
+// app.use(cors(corsOptions));
 
 const port = process.env.PORT || 3000;  // Fallback to 3000 if PORT isn't set
 app.listen(port, () => {
