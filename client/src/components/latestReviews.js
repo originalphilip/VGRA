@@ -2,10 +2,11 @@ import React, { useEffect, useState } from 'react';
 
 function LatestReview() {
   const [latestReview, setLatestReview] = useState(null);
+  const serverUrl = process.env.REACT_APP_API_URL || 'http://localhost:0';
 
   useEffect(() => {
     // Fetch the reviews data from your API
-    fetch('/api/reviews')
+    fetch(`${serverUrl}/api/reviews`)
       .then(response => {
         if (!response.ok) {
           throw new Error('Network response was not ok');
@@ -21,7 +22,7 @@ function LatestReview() {
         }
       })
       .catch(error => console.error("There was an error fetching the reviews:", error));
-  }, []);
+  }, [serverUrl]);
 
   return (
     <div className="latest-review-container">
