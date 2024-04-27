@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 
 function LatestReview() {
   const [latestReview, setLatestReview] = useState(null);
-  const serverUrl = process.env.REACT_APP_API_URL || 'http://localhost:10000';
+  const serverUrl = process.envREACT_APP_BACKEND_URL  || 'http://localhost:5000';
 
   useEffect(() => {
     // Fetch the reviews data from your API
