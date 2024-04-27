@@ -15,11 +15,10 @@ app.use(express.json()); // Middleware to parse JSON bodies
 // };
 // app.use(cors(corsOptions));
 
-const port = process.env.PORT || 0;  // Setting the port to 0 asks the OS to assign a free port
+const port = process.env.PORT || 5000;  // Fallback to 3000 if PORT isn't set
 app.listen(port, () => {
   console.log(`Server running on port ${port}`);
 });
-
 
 
 // Define routes
