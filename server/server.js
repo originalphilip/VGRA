@@ -10,17 +10,17 @@ const db = require("./database.js");
 app.use(cors());
 app.use(express.json()); // Middleware to parse JSON bodies
 
-// const allowedOrigins = ['https://vgra.onrender.com/'];
+const allowedOrigins = ['https://vgra.onrender.com/'];
 
-// app.use(cors({
-//   origin: function(origin, callback) {
-//     if (!origin || allowedOrigins.includes(origin)) {
-//       callback(null, true);
-//     } else {
-//       callback(new Error('Not allowed by CORS'));
-//     }
-//   }
-// }));
+app.use(cors({
+  origin: function(origin, callback) {
+    if (!origin || allowedOrigins.includes(origin)) {
+      callback(null, true);
+    } else {
+      callback(new Error('Not allowed by CORS'));
+    }
+  }
+}));
 
 const port = process.env.PORT || 5000;  // Fallback to 3000 if PORT isn't set
 app.listen(port, () => {
