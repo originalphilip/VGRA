@@ -16,7 +16,7 @@ function App() {
 
   useEffect(() => {
     // Fetch platforms from the server
-    fetch(`${serverUrl}/api/platforms`)
+    fetch(`${serverUrl}api/platforms`)
       .then(response => response.json())
       .then(data => {
         if (data && data.data) {
@@ -42,7 +42,7 @@ function App() {
   };
 
   useEffect(() => {
-    fetch(`${serverUrl}/api/genres`)
+    fetch(`${serverUrl}api/genres`)
       .then(response => response.json())
       .then(data => {
         if (data && data.data) {
