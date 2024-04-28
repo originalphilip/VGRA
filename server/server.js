@@ -17,7 +17,7 @@ app.use(cors({
     // allow requests with no origin (like mobile apps, curl requests)
     if (!origin) return callback(null, true);
     // Restrict it to the origin of your app
-    if (['https://vgra.onrender.com/'].indexOf(origin) === -1) {
+    if (['https://vgra.onrender.com'].indexOf(origin) === -1) {
       var msg = 'The CORS policy for this site does not allow access from the specified Origin.';
       return callback(new Error(msg), false);
     }
