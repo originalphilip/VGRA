@@ -8,7 +8,7 @@ const cors = require("cors");
 const db = require("./database.js");
 
 app.use(cors());
-app.use(express.json()); // Middleware to parse JSON bodies
+//app.use(express.json()); // Middleware to parse JSON bodies
 
 // const allowedOrigins = ['https://vgra.onrender.com/'];
 
