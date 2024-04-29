@@ -6,7 +6,7 @@ function LatestReview() {
 
   useEffect(() => {
     // Fetch the reviews data from your API
-    fetch(`${serverUrl}/api/reviews`)
+    fetch(`${serverUrl}api/reviews`)
       .then(response => {
         if (!response.ok) {
           throw new Error('Network response was not ok');
