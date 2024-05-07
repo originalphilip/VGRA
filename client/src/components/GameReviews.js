@@ -17,7 +17,7 @@ function GameReviews({ filter, onPlatformsFetched }) {
 
   const fetchPlatformsForGames = useCallback((gameIds) => {
     const queryParams = new URLSearchParams({ gameIds: gameIds.join(',') }).toString();
-    const serverUrl = process.env.REACT_APP_BACKEND_URL  || 'http://localhost:5000'; // Default to localhost if the env variable is not set
+    const serverUrl = process.env.REACT_APP_BACKEND_URL  || 'http://localhost:5000/'; // Default to localhost if the env variable is not set
     const url = `${serverUrl}api/platforms-for-games?${queryParams}`;
 
     fetch(url)

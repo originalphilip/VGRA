@@ -8,22 +8,6 @@ const cors = require("cors");
 const db = require("./database.js");
 
 app.use(cors());
-//app.use(express.json()); // Middleware to parse JSON bodies
-
-// const allowedOrigins = ['https://vgra.onrender.com/'];
-
-// app.use(cors({
-//   origin: function (origin, callback) {
-//     // allow requests with no origin (like mobile apps, curl requests)
-//     if (!origin) return callback(null, true);
-//     // Restrict it to the origin of your app
-//     if (['https://vgra.onrender.com'].indexOf(origin) === -1) {
-//       var msg = 'The CORS policy for this site does not allow access from the specified Origin.';
-//       return callback(new Error(msg), false);
-//     }
-//     return callback(null, true);
-//   }
-// }));
 
 const port = process.env.PORT || 5000;  // Fallback to 3000 if PORT isn't set
 app.listen(port, () => {
