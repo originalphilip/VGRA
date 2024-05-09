@@ -28,35 +28,49 @@ h2 {
     /* Stack children vertically */
     margin: 0;
     padding: 0;
+    justify-content: space-around;
+    flex-wrap: wrap;
+    width: 100%;
 }
 
 /* MAIN CONTAINTER(REVIEWS)*/
-main {
-    display: flex;
-    flex-direction: column;
-    margin: 0;
-    padding: 0.5%;
-}
 
 .main-layout {
     display: flex;
-    flex-wrap: wrap;
-    /* Allow items to wrap onto the next line */
-    justify-content: space-between;
-    /* Align children to the sides */
-    align-items: flex-start;
-    /* Align children to the top */
+    flex-direction: row;  /* Ensures children are laid out in a row */
+    justify-content: space-between; /* Distributes space between children */
+    align-items: flex-start; /* Aligns children at the top of the container */
+    flex-wrap: nowrap; /* Allows items to wrap to the next line */
+    width: 100%; /* Full width of its container */
 }
 
 @media (max-width: 768px) {
     .main-layout {
-        flex-direction: column;
-        /* Stack vertically on small screens */
+        flex-direction: column; /* Stack vertically */
     }
-
     .latest-review-container {
-        width: 100%;
-        /* Full width on smaller screens */
+        order: 2; /* Make sure this is below the main content */
+        width: 100%; /* Full width for smaller screens */
+        padding: 20px; /* Padding for aesthetics */
+    }
+    .main-content {
+        order: 1; /* Main content appears first */
+        width: 100%; /* Full width */
+    }
+}
+
+@media (min-width: 768px) {
+    .latest-review-container {
+        order: 2; /* Position to the right */
+        flex-grow: 0;  /* No growth beyond specified width */
+        width: 30%; /* Width set to 30% of the parent container */
+        padding: 20px; /* Padding */
+    }
+    .main-content {
+        order: 1; /* Main content first */
+        flex-grow: 1; /* Fill available space */
+        width: calc(70% - 40px); /* Calculate width to leave space for sidebar */
+        padding-right: 20px; /* Padding between main content and reviews */
     }
 }
 
@@ -75,49 +89,68 @@ main {
     /* Align the items to the top */
     padding: 0.5%;
     margin-bottom: 2%;
+    width: 100%;
+    flex-wrap: wrap;
     /* Space between game containers */
+}
+
+@media (min-width: 600px) {
+    .game-container {
+        width: 100%; /* Sets width to less than half to fit two items per row */
+    }
+
+    .image-placeholder.large {
+        width: 400px; /* Fixed width */
+        height: 250px; /* Fixed height */
+    }
+}
+
+/* smaller screens */
+@media (max-width: 768px) {
+    .game-container {
+        flex-direction: column;
+    }
+
+    .image-and-score {
+        width: 100%;
+        margin-right: 0;
+    }
+
+    .game-info {
+        width: 100%
+    }
 }
 
 .image-placeholder {
     width: 100%;
-    /* Full width on smaller screens */
     height: auto;
-    /* Maintain aspect ratio */
     background-color: #e0e0e0;
-    /* Light gray background */
     border-radius: 8px;
     margin-right: 10px;
-    /* Add space to the right of the image placeholder */
 }
 
-/* Styles for tablets and desktops */
-@media (min-width: 768px) {
+@media (min-width: 600px) {
     .image-placeholder {
         width: 200px;
-        /* Fixed width on larger screens */
         height: 150px;
-        /* Fixed height */
     }
 }
 
 .game-info {
     display: block;
-    /* Take the full width available */
+    flex-direction: column;
+    flex-grow: 1;
+    align-items: flex-start;
 }
 
 h3 {
     margin-top: 0;
-    /* Remove top margin if any */
 }
 
 p {
-    /* Paragraph styles, ensure top margin is removed for alignment */
     flex-shrink: 0;
-    /* Prevent the placeholder from shrinking */
     flex-grow: 0;
-    /* Prevent the placeholder from growing */
     flex-basis: 500px;
-    /* Set the default size of the item */
     width: 500px;
     margin-top: 0;
 }
@@ -128,8 +161,9 @@ p {
     display: flex;
     flex-direction: column;
     align-items: center;
-    /* Center-align the items vertically */
     padding: 20px;
+    flex-wrap: wrap;
+    width: 100%;
 }
 
 .latest-review-container h2 {
@@ -138,27 +172,22 @@ p {
 
 .image-placeholder.large {
     display: flex;
-    /* Use flex layout to center the image */
     justify-content: center;
-    /* Center horizontally */
     align-items: center;
-    /* Center vertically */
-    width: 400px;
     height: 250px;
     overflow: hidden;
-    /* Hide parts of the image that don't fit */
     border-radius: 8px;
+    flex-wrap: wrap;
+    width: 100%;
 }
 
 .image-placeholder.large img {
     max-width: 100%;
-    /* Make the image fill the container */
     height: auto;
-    /* Adjust height automatically to maintain aspect ratio */
     object-fit: contain;
 }
 
-@media (min-width: 768px) {
+@media (min-width: 600px) {
     .image-placeholder.large {
         width: 400px;
         height: 250px;
@@ -177,11 +206,13 @@ p {
     display: flex;
     flex-direction: column;
     align-items: center;
-    margin-right: 20px; /* Space between image/score and game info */
+    width: auto;
+    margin-right: 20px;
+    flex-wrap: wrap;
   }
 
 .score-badge {
-    margin-top: 10px; /* Space between image and score badge */
+    margin-top: 10px; 
   }
 
   .score-section {
@@ -192,5 +223,5 @@ p {
     font-size: 16px;
     font-weight: bold;
     color: #333;
-    margin-bottom: 5px; /* Space between the "Review Score" text and the score badge */
+    margin-bottom: 5px;
   }
