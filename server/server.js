@@ -1,4 +1,4 @@
-require('dotenv').config();
+require("dotenv").config();
 const express = require("express");
 const app = express();
 //const port = 5000;
@@ -11,7 +11,6 @@ const port = process.env.PORT || 5000;
 app.listen(port, () => {
   console.log(`Server running on port ${port}`);
 });
-
 
 // define routes
 app.get("/api/reviews", (req, res) => {
@@ -71,12 +70,14 @@ app.get("/api/reviews", (req, res) => {
       .filter((row) => {
         // ensure that we have multiple source websites
         const sourceWebsites = row.SourceWebsites.split(",");
-        const allSitesIdentical = sourceWebsites.every((val, i, arr) => val === arr[0]);
+        const allSitesIdentical = sourceWebsites.every(
+          (val, i, arr) => val === arr[0]
+        );
         return !allSitesIdentical;
       })
       .map((row) => ({
         ...row,
-        Platforms: row.Platforms ? row.Platforms.split(',') : []
+        Platforms: row.Platforms ? row.Platforms.split(",") : [],
       }));
 
     console.log("Sending filtered data to client:", data);
@@ -96,37 +97,37 @@ app.get("/api/platforms", (req, res) => {
       res.status(500).json({ error: err.message });
       return;
     }
-    
+
     // send a 200 OK response along with the platform data
     res.json({
       message: "success",
-      data: rows
+      data: rows,
     });
   });
 });
 
 app.get("/api/platforms-for-games", (req, res) => {
   // extract gameIds from query parameters and split by comma
-  const gameIds = req.query.gameIds ? req.query.gameIds.split(',') : [];
+  const gameIds = req.query.gameIds ? req.query.gameIds.split(",") : [];
 
   // SQL query to fetch platforms for the given game IDs
   const sql = `
       SELECT GamePlatforms.GameID, GROUP_CONCAT(Platforms.Name) AS Platforms
       FROM GamePlatforms
       JOIN Platforms ON GamePlatforms.PlatformID = Platforms.PlatformID
-      WHERE GamePlatforms.GameID IN (${gameIds.map(id => '?').join(',')})
+      WHERE GamePlatforms.GameID IN (${gameIds.map((id) => "?").join(",")})
       GROUP BY GamePlatforms.GameID;
   `;
 
   db.all(sql, gameIds, (err, rows) => {
-      if (err) {
-          res.status(400).json({ error: err.message });
-          return;
-      }
-      res.json({
-          message: "success",
-          data: rows
-      });
+    if (err) {
+      res.status(400).json({ error: err.message });
+      return;
+    }
+    res.json({
+      message: "success",
+      data: rows,
+    });
   });
 });
 
@@ -141,7 +142,7 @@ app.get("/api/genres", (req, res) => {
     }
     res.json({
       message: "success",
-      data: rows.map(row => row.Name),
+      data: rows.map((row) => row.Name),
     });
   });
 });
