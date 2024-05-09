@@ -1,33 +1,34 @@
-# Getting Started with Create React App
 
+# Client for Video Game Review Aggregator
+
+## Introduction
+This client-side application is developed using React. It interfaces with the server to fetch and display video game reviews in an engaging and interactive format.
+
+## Getting Started
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
-## Available Scripts
+### Prerequisites
+- Node.js (Download and install from [Node.js official website](https://nodejs.org/))
+- npm (Comes installed with Node.js)
 
-In the project directory, you can run:
+### Setup
+Unzip the repository and navigate to the client directory:
+cd client 
 
-### `npm start`
+### Installation
+Install all dependencies required by the project:
+'npm install'
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+### Running the application
+To start the client application in developmen mode:
+'npm start'
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+This command will run the client at http://localhost:3000. The application will automatically reload if you make any changes to the code. You may also see any lint errors in the console.
 
-### `npm test`
-
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
-
-### `npm run build`
-
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
-
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
-
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+### Building for production
+When ready to build the production version of the app:
+'npm run build'
+This commande will build the application for production to the 'build' folder. It correctly bundles React in production mode and optimizes the build.
 
 ### `npm run eject`
 
