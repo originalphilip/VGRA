@@ -6,7 +6,7 @@ def query_database(query):
     conn = sqlite3.connect('ReviewsDB')
     cursor = conn.cursor()
     cursor.execute(query)
-    result = cursor.fetchone()  # fetchone() gets a single result
+    result = cursor.fetchone()
     conn.close()
     return result[0] if result else None
 
@@ -21,19 +21,19 @@ def execute_database(command):
 duplicates_mapping = {
     'PC (Microsoft Windows)': 'PC',
     'Xbox Series X': 'Xbox Series X|S',
-    # Add other duplicates as needed
+    # add other duplicates as needed
 }
 
 for duplicate, primary in duplicates_mapping.items():
-    #Find the PlatformIDs based on the name
+    # find the PlatformIDs based on the name
     primary_id = query_database(f"SELECT PlatformID FROM Platforms WHERE Name = '{primary}'")
     duplicate_id = query_database(f"SELECT PlatformID FROM Platforms WHERE Name = '{duplicate}'")
     
     if primary_id and duplicate_id:
-        #Reassign games from the duplicate to the primary platform
+        # reassign games from the duplicate to the primary platform
         execute_database(f"UPDATE GamePlatforms SET PlatformID = {primary_id} WHERE PlatformID = {duplicate_id}")
     
-        # Delete the duplicate platform
+        # delete the duplicate platform
         execute_database(f"DELETE FROM Platforms WHERE PlatformID = {duplicate_id}")
         print(f"Merged and removed {duplicate} into {primary}")
     else:

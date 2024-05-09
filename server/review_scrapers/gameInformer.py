@@ -46,7 +46,7 @@ def scrape_gameinformer_reviews():
     
     try:
         wait.until(EC.presence_of_element_located((By.CSS_SELECTOR, "div.ds-main .views-row")))
-        conn = sqlite3.connect('ReviewsDB')
+        conn = sqlite3.connect('../ReviewsDB')
 
         # Attempt to close any potential overlays first
         try:

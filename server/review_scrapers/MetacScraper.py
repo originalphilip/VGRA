@@ -8,7 +8,7 @@ import time
 import sqlite3
 
 # Connect to the database
-conn = sqlite3.connect('reviewsDB')
+conn = sqlite3.connect('../reviewsDB')
 
 def insert_game(conn, game_name):
     cursor = conn.cursor()

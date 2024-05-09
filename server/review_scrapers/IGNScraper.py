@@ -9,7 +9,7 @@ from urllib.parse import urljoin, unquote
 
 
 # Connect to the SQLite database
-conn = sqlite3.connect('reviewsDB')
+conn = sqlite3.connect('../reviewsDB')
 cursor = conn.cursor()
 
 def extract_detailed_title_from_url(url):

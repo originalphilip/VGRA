@@ -55,7 +55,7 @@ def scrape_gamespot_reviews():
 
 
     # Connect to the SQLite database
-    conn = sqlite3.connect('ReviewsDB')
+    conn = sqlite3.connect('../ReviewsDB')
 
     # Find all review elements
     reviews = driver.find_elements(By.CSS_SELECTOR, ".card-item__main")
