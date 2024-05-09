@@ -3,19 +3,17 @@ const express = require("express");
 const app = express();
 //const port = 5000;
 const cors = require("cors");
-
-// Import database module
 const db = require("./database.js");
 
 app.use(cors());
 
-const port = process.env.PORT || 5000;  // Fallback to 3000 if PORT isn't set
+const port = process.env.PORT || 5000;
 app.listen(port, () => {
   console.log(`Server running on port ${port}`);
 });
 
 
-// Define routes
+// define routes
 app.get("/api/reviews", (req, res) => {
   let sql = `
     SELECT 
@@ -41,7 +39,7 @@ app.get("/api/reviews", (req, res) => {
     WHERE 1=1
   `;
 
-  // Initialize an array to hold the parameters for the SQL query
+  // initialize an array to hold the parameters for the SQL query
   const params = [];
 
   if (req.query.platform) {
@@ -51,7 +49,7 @@ app.get("/api/reviews", (req, res) => {
 
   if (req.query.genre) {
     sql += ` AND Games.Genre LIKE ?`;
-    // Use '%' to allow for any characters before or after the genre name
+    // use '%' to allow for any characters before or after the genre name
     params.push(`%${req.query.genre}%`);
   }
 
@@ -68,10 +66,10 @@ app.get("/api/reviews", (req, res) => {
       return;
     }
 
-    // Filter out games with reviews from only identical source websites
+    // filter out games with reviews from only identical source websites
     const data = rows
       .filter((row) => {
-        // Ensure that we have multiple source websites
+        // ensure that we have multiple source websites
         const sourceWebsites = row.SourceWebsites.split(",");
         const allSitesIdentical = sourceWebsites.every((val, i, arr) => val === arr[0]);
         return !allSitesIdentical;
@@ -94,12 +92,12 @@ app.get("/api/platforms", (req, res) => {
 
   db.all(sql, [], (err, rows) => {
     if (err) {
-      // Send a 500 Internal Server Error response if there's a problem with the database query
+      // send a 500 Internal Server Error response if there's a problem with the query
       res.status(500).json({ error: err.message });
       return;
     }
     
-    // Send a 200 OK response along with the platform data
+    // send a 200 OK response along with the platform data
     res.json({
       message: "success",
       data: rows
@@ -108,7 +106,7 @@ app.get("/api/platforms", (req, res) => {
 });
 
 app.get("/api/platforms-for-games", (req, res) => {
-  // Extract gameIds from query parameters and split by comma
+  // extract gameIds from query parameters and split by comma
   const gameIds = req.query.gameIds ? req.query.gameIds.split(',') : [];
 
   // SQL query to fetch platforms for the given game IDs

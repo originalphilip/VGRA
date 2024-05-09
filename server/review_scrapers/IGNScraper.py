@@ -8,7 +8,7 @@ from fuzzywuzzy import fuzz, process
 from urllib.parse import urljoin, unquote
 
 
-# Connect to the SQLite database
+# connect to the SQLite database
 conn = sqlite3.connect('../reviewsDB')
 cursor = conn.cursor()
 
@@ -23,7 +23,7 @@ def extract_detailed_title_from_url(url):
 
 def insert_or_fetch_game(conn, title, detailed_title, score_threshold=85):
     cursor = conn.cursor()
-    # Use the detailed title for matching if available
+    # use the detailed title for matching if available
     search_title = detailed_title if detailed_title else title
     games = cursor.execute("SELECT GameID, GameName FROM Games").fetchall()
     
@@ -49,33 +49,31 @@ def insert_review(conn, game_id, original_score, normalized_score, score_scale, 
         conn.commit()
         print(f"Inserted review for GameID {game_id}.")
 
-# Extend scrolling to ensure more reviews are loaded
+# extend scrolling to ensure more reviews are loaded
 def scroll_and_load_reviews(driver):
     last_height = driver.execute_script("return document.body.scrollHeight")
     while True:
         driver.execute_script("window.scrollTo(0, document.body.scrollHeight);")
-        time.sleep(5)  # Adjust sleep time as needed for the page to load
+        time.sleep(5) 
         new_height = driver.execute_script("return document.body.scrollHeight")
         if new_height == last_height:
             break
         last_height = new_height
 
-# Setup Selenium WebDriver
 service = Service(ChromeDriverManager().install())
 driver = webdriver.Chrome(service=service)
 driver.get('https://www.ign.com/reviews/games')
 time.sleep(5)
 
-# After setting up the Selenium WebDriver and navigating to the reviews page
-scroll_and_load_reviews(driver)  # Call this function to scroll through the page and load more reviews
+scroll_and_load_reviews(driver)
 
 soup = BeautifulSoup(driver.page_source, 'html.parser')
-# Find the common parent elements.
+# find the common parent elements.
 reviews = soup.find_all('div', class_='content-item jsx-1409608325 row divider')
 base_url = 'https://www.ign.com'
 
 for review in reviews[:40]:
-    # Extract the review title using the provided class details
+    # extract the revieq title using the provided class details
     title_element = review.find('span', class_='interface jsx-1039724788 item-title bold')
     if not title_element:
         continue
@@ -97,7 +95,6 @@ for review in reviews[:40]:
 
     #print(f"Processed review for '{title}' with score '{original_score}' and URL '{full_url}'.")
 
-# Close the browser and database connection
 driver.quit()
 cursor.close()
 conn.close()

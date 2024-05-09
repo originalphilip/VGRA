@@ -6,7 +6,7 @@ from datetime import datetime, timezone
 client_id = 'u8ztv2mgn5yvntus43u1rnpiyhksu0'
 client_secret = 'vuvc91kbyfpf4g72vvjum9alszr933'
 
-# Getting the access token
+# getting the access token
 auth_url = 'https://id.twitch.tv/oauth2/token'
 params = {
     'client_id': client_id,
@@ -23,7 +23,7 @@ headers = {
     'Accept': 'application/json'
 }
 
-# Connect to reviews database
+# connect to reviews database
 conn = sqlite3.connect('../ReviewsDB')
 cursor = conn.cursor()
 
@@ -53,7 +53,7 @@ def search_igdb(title, category_filter=None):
     return response.json()
 
 def handle_title(title):
-    # Add logic to modify the title or decide on category based on specific keywords
+    # logic to modify the title or decide on category based on specific keywords
     category_filter = '1,2' if 'dlc' in title.lower() or 'expansion' in title.lower() else None
     return title.replace('dlc', '').replace('expansion', '').strip(), category_filter
 
@@ -69,7 +69,7 @@ def handle_special_cases(title):
     modified_title = title.replace('DLC', '').strip()
     return modified_title, 'DLC' in title or 'Expansion' in title
 
-# Function to insert or fetch a platform and return its ID
+# function to insert or fetch a platform and return its ID
 def insert_or_update_platforms(game_id, platform_names):
     for platform_name in platform_names:
         cursor.execute("SELECT PlatformID FROM Platforms WHERE Name = ?", (platform_name,))
@@ -103,7 +103,6 @@ for game in games:
     best_match = next((res for res in results if fuzz.token_set_ratio(res['name'], title) > 85), None)
     
     if best_match:
-        # Extract details and update database
         name = best_match['name']
         platforms = [plat['name'] for plat in best_match.get('platforms', [])] 
         genres = [gen['name'] for gen in best_match.get('genres', [])]
@@ -114,12 +113,7 @@ for game in games:
         game_id = update_game_if_exists(name, release_date, description, image_url)
         print(f"Updated {name} in the database with ID {game_id}.")
         
-        insert_or_update_platforms(game_id, platforms)  # Ensure platforms is a list
-
-        # for platform_name in platforms:
-        #     platform_id = insert_or_update_platforms(game_id, platform_name)
-        #     cursor.execute("INSERT OR IGNORE INTO GamePlatforms (GameID, PlatformID) VALUES (?, ?)", (game_id, platform_id))
-        #     conn.commit()
+        insert_or_update_platforms(game_id, platforms)
 
         for genre_name in genres:
             genre_id = insert_or_fetch_genre(genre_name)

@@ -48,21 +48,21 @@ def scrape_gameinformer_reviews():
         wait.until(EC.presence_of_element_located((By.CSS_SELECTOR, "div.ds-main .views-row")))
         conn = sqlite3.connect('../ReviewsDB')
 
-        # Attempt to close any potential overlays first
+        # attempt to close any potential overlays first
         try:
-            # Example: Close cookie consent or any overlay, update the selector as needed
+            # example: close cookie consent or any overlay, update the selector as needed
             close_button = driver.find_element(By.CSS_SELECTOR, "button.cookie-consent-close")
             close_button.click()
         except NoSuchElementException:
             print("No overlay button found.")
 
-        # Handling dynamic content loading
+        # handling dynamic content loading
         while True:
             try:
                 load_more_button = driver.find_element(By.CSS_SELECTOR, 'a.button[rel="next"]')
-                # Use JavaScript to perform the click to bypass overlay issues
+                # use JavaScript to perform the click to bypass overlay issues
                 driver.execute_script("arguments[0].click();", load_more_button)
-                # Wait to ensure the page has loaded new content
+                # wait to ensure the page has loaded new content
                 WebDriverWait(driver, 10).until(EC.staleness_of(load_more_button))
             except NoSuchElementException:
                 print("No more 'Load More' button found.")
@@ -94,7 +94,7 @@ def scrape_gameinformer_reviews():
     except TimeoutException:
         print("Failed to load all reviews within the allotted time.")
         driver.quit()
-        return  # Exit if elements are not loaded
+        return  # exit if elements are not loaded
 
 if __name__ == "__main__":
     scrape_gameinformer_reviews()
