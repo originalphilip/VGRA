@@ -25,7 +25,6 @@ h2 {
 .content-container {
     display: flex;
     flex-direction: column;
-    /* Stack children vertically */
     margin: 0;
     padding: 0;
     justify-content: space-around;
@@ -37,48 +36,46 @@ h2 {
 
 .main-layout {
     display: flex;
-    flex-direction: row;  /* Ensures children are laid out in a row */
-    justify-content: space-between; /* Distributes space between children */
-    align-items: flex-start; /* Aligns children at the top of the container */
-    flex-wrap: nowrap; /* Allows items to wrap to the next line */
-    width: 100%; /* Full width of its container */
+    flex-direction: row; 
+    justify-content: space-between;
+    align-items: flex-start;
+    flex-wrap: nowrap;
+    width: 100%;
 }
 
 @media (max-width: 768px) {
     .main-layout {
-        flex-direction: column; /* Stack vertically */
+        flex-direction: column;
     }
     .latest-review-container {
-        order: 2; /* Make sure this is below the main content */
-        width: 100%; /* Full width for smaller screens */
-        padding: 20px; /* Padding for aesthetics */
+        order: 2;
+        width: 100%;
+        padding: 20px;
     }
     .main-content {
-        order: 1; /* Main content appears first */
-        width: 100%; /* Full width */
+        order: 1;
+        width: 100%;
     }
 }
 
 @media (min-width: 768px) {
     .latest-review-container {
-        order: 2; /* Position to the right */
-        flex-grow: 0;  /* No growth beyond specified width */
-        width: 30%; /* Width set to 30% of the parent container */
-        padding: 20px; /* Padding */
+        order: 2;
+        flex-grow: 0;
+        width: 30%;
+        padding: 20px;
     }
     .main-content {
-        order: 1; /* Main content first */
-        flex-grow: 1; /* Fill available space */
-        width: calc(70% - 40px); /* Calculate width to leave space for sidebar */
-        padding-right: 20px; /* Padding between main content and reviews */
+        order: 1;
+        flex-grow: 1;
+        width: calc(70% - 40px);
+        padding-right: 20px;
     }
 }
 
 .main-content {
     flex-grow: 1;
-    /* Allow main content to take up the available space */
     width: 100%;
-    /* Take full width to prevent overlap */
 }
 
 /* GAME CONTAINER(EACH REVIEW)*/
@@ -86,22 +83,20 @@ h2 {
     display: flex;
     flex-direction: row;
     align-items: flex-start;
-    /* Align the items to the top */
     padding: 0.5%;
     margin-bottom: 2%;
     width: 100%;
     flex-wrap: wrap;
-    /* Space between game containers */
 }
 
 @media (min-width: 600px) {
     .game-container {
-        width: 100%; /* Sets width to less than half to fit two items per row */
+        width: 100%;
     }
 
     .image-placeholder.large {
-        width: 400px; /* Fixed width */
-        height: 250px; /* Fixed height */
+        width: 400px;
+        height: 250px;
     }
 }
 

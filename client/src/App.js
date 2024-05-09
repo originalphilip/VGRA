@@ -15,7 +15,6 @@ function App() {
   const serverUrl = process.env.REACT_APP_BACKEND_URL  || 'http://localhost:5000/';
 
   useEffect(() => {
-    // Fetch platforms from the server
     fetch(`${serverUrl}api/platforms`)
       .then(response => response.json())
       .then(data => {
@@ -25,7 +24,7 @@ function App() {
         }
       })
       .catch(error => console.error('Error fetching platform data:', error));
-  }, [serverUrl]); // Empty dependency array means this effect runs once on mount
+  }, [serverUrl]);
 
   const handleFilter = (filterObj) => {
     setFilter(prev => ({ ...prev, ...filterObj }));
@@ -37,7 +36,6 @@ function App() {
   };
 
   const handlePlatformsFetched = (platforms) => {
-    // platforms parameter is now just an array of platform names
     setPlatforms(platforms);
   };
 

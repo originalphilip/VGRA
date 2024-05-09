@@ -5,7 +5,6 @@ function LatestReview() {
   const serverUrl = process.env.REACT_APP_BACKEND_URL  || 'http://localhost:5000/';
 
   useEffect(() => {
-    // Fetch the reviews data from your API
     fetch(`${serverUrl}api/reviews`)
       .then(response => {
         if (!response.ok) {
@@ -15,10 +14,8 @@ function LatestReview() {
       })
       .then(data => {
         console.log("Fetched data:", data);
-        // Assuming the response body directly contains the array of reviews
-        // and that they are sorted by date with the latest first
         if (data && data.data && data.data.length > 0) {
-          setLatestReview(data.data[0]); // Set the first review as the latest
+          setLatestReview(data.data[0]);
         }
       })
       .catch(error => console.error("There was an error fetching the reviews:", error));

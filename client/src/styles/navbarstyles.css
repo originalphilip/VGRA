@@ -23,8 +23,8 @@ main{
     text-align: center;
     background-color: hsl(0, 0%, 25%);
     display: flex;
-    align-items: center; /* Vertically center the logo */
-    justify-content: center; /* Horizontally center the logo */
+    align-items: center;
+    justify-content: center;
 }
 .nav-logo img {
     height: 40px;
@@ -49,7 +49,7 @@ main{
 
 @media (min-width: 576px) {
     .main {
-        flex-direction: row; /* Horizontal layout for larger screens */
+        flex-direction: row;
         flex-wrap: wrap;
     }
 }

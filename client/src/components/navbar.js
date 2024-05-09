@@ -1,5 +1,5 @@
 import React from 'react';
-import logo from '../assets/icons/logo.png'; // Adjust the path as necessary
+import logo from '../assets/icons/logo.png';
 
 function Navbar() {
   return (
