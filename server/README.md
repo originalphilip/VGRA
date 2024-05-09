@@ -9,17 +9,22 @@ The server for this project handles API requests from the client to fetch and ma
 
 ### Setup
 After unzipping the repository to your local machine, navigate to the server directory:
-cd server
+'cd server'
 
 ### Installation
 Install the necessary pacakges required for the server:
+Make sure there is no current node_modules folder, if so delete this then do:
 'npm install'
 
 ### Running the Server
 To start the server:
 'npm start'
 
-This will launch the server on http://localhost:5000. Make sure that the server is running to handle requests from the client
+This will launch the server on http://localhost:5000. 
+
+If you already have something running on port http://localhost:5000, you can change this where http://localhost:5000 or port 5000 is defined in the code to another port number not being used.
+
+Make sure that the server is running to handle requests from the client
 
 ### Running the Scripts
 

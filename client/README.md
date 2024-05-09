@@ -13,17 +13,22 @@ This project was bootstrapped with [Create React App](https://github.com/faceboo
 
 ### Setup
 Unzip the repository and navigate to the client directory:
-cd client 
+'cd client' 
 
 ### Installation
 Install all dependencies required by the project:
+Make sure there is no current node_modules folder, if so delete this then do:
 'npm install'
 
 ### Running the application
 To start the client application in developmen mode:
 'npm start'
 
-This command will run the client at http://localhost:3000. The application will automatically reload if you make any changes to the code. You may also see any lint errors in the console.
+This command will run the client at http://localhost:3000.
+
+If you already have something running on port http://localhost:3000, you can change this where http://localhost:3000 is defined in the code to another port number not being used.
+
+The application will automatically reload if you make any changes to the code. You may also see any lint errors in the console.
 
 ### Building for production
 When ready to build the production version of the app:
